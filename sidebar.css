@@ -1,0 +1,160 @@
+/* Admin Sidebar Modern Elegant Theme */
+/* Palette: dark base #1E1E2F, accent #6C63FF, hover subtle, soft icons */
+:root {
+  --sidebar-bg: #1E1E2F;
+  --sidebar-text: #E6E6FA; /* lavender-ish */
+  --sidebar-icon: #B8B8D8;
+  --sidebar-hover-bg: rgba(255,255,255,0.06);
+  --sidebar-active-bg: rgba(108, 99, 255, 0.18);
+  --sidebar-active-text: #DDE0FF;
+  --sidebar-active-icon: #9EA8FF;
+  --sidebar-border: rgba(255,255,255,0.08);
+  --sidebar-shadow: 0 6px 18px rgba(0,0,0,0.25);
+}
+
+/* container */
+.admin-sidebar {
+  background-color: var(--sidebar-bg) !important;
+  color: var(--sidebar-text);
+  min-height: calc(100vh - 56px);
+  box-shadow: inset -1px 0 0 var(--sidebar-border);
+}
+
+.admin-sidebar .position-sticky {
+  padding-top: .5rem !important;
+}
+
+/* header with toggle */
+.admin-sidebar .sidebar-header {
+  border-bottom: 1px solid var(--sidebar-border);
+  margin-bottom: .5rem;
+}
+.admin-sidebar .sidebar-header .brand {
+  color: var(--sidebar-text);
+  font-weight: 600;
+  letter-spacing: .2px;
+}
+.admin-sidebar .sidebar-header .brand i {
+  color: var(--sidebar-active-icon);
+  font-size: 1.1rem;
+}
+.admin-sidebar .sidebar-toggle {
+  --bs-btn-color: var(--sidebar-text);
+  --bs-btn-border-color: var(--sidebar-border);
+  --bs-btn-hover-bg: var(--sidebar-hover-bg);
+  --bs-btn-hover-border-color: var(--sidebar-border);
+  --bs-btn-focus-shadow-rgb: 108, 99, 255;
+  transition: transform .2s ease, background-color .2s ease;
+}
+.admin-sidebar .sidebar-toggle i {
+  transition: transform .2s ease;
+}
+
+/* nav items */
+.admin-sidebar .nav {
+  padding-bottom: .75rem;
+}
+.admin-sidebar .nav-link {
+  color: var(--sidebar-text);
+  border-radius: .65rem;
+  padding: .55rem .8rem;
+  margin: .15rem .6rem;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  transition: background-color .2s ease, color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+.admin-sidebar .nav-link i {
+  color: var(--sidebar-icon);
+  font-size: 1.05rem;
+  width: 1.25rem;
+  text-align: center;
+}
+.admin-sidebar .nav-link .item-text {
+  white-space: nowrap;
+}
+.admin-sidebar .nav-link:hover {
+  text-decoration: none;
+  background: var(--sidebar-hover-bg);
+  box-shadow: var(--sidebar-shadow);
+  transform: translateX(2px);
+}
+.admin-sidebar .nav-link.active {
+  background: var(--sidebar-active-bg);
+  color: var(--sidebar-active-text);
+  font-weight: 600;
+}
+.admin-sidebar .nav-link.active i {
+  color: var(--sidebar-active-icon);
+}
+
+/* subtle separators between groups */
+.admin-sidebar .nav-item.mt-2 {
+  margin-top: .6rem !important;
+  padding-top: .35rem;
+  border-top: 1px dashed var(--sidebar-border);
+}
+
+/* collapsed state: icon-only */
+body.sidebar-collapsed .admin-sidebar .brand-text,
+body.sidebar-collapsed .admin-sidebar .nav-link .item-text {
+  display: none !important;
+}
+body.sidebar-collapsed .admin-sidebar .nav-link {
+  justify-content: center;
+  padding: .6rem .5rem;
+}
+body.sidebar-collapsed .admin-sidebar .sidebar-toggle i {
+  transform: rotate(180deg);
+}
+
+/* focus-visible for accessibility */
+.admin-sidebar .nav-link:focus-visible {
+  outline: 2px solid #6C63FF;
+  outline-offset: 2px;
+}
+
+/* responsive tweaks */
+@media (max-width: 991.98px) {
+  .admin-sidebar .nav-link {
+    margin: .1rem .5rem;
+    padding: .5rem .7rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  /* If you later remove d-none d-md-block, this keeps it elegant on small screens */
+  .admin-sidebar {
+    min-height: auto;
+  }
+}
+/* Collapsed width behavior: shrink sidebar to icon-only and expand main */
+.admin-sidebar {
+  transition: flex-basis .25s ease, max-width .25s ease, width .25s ease, padding .25s ease;
+}
+
+body.sidebar-collapsed .admin-sidebar {
+  width: 72px !important;
+  max-width: 72px !important;
+  flex: 0 0 72px !important;
+}
+
+/* Ensure icon stays visually balanced when collapsed */
+body.sidebar-collapsed .admin-sidebar .nav-link i {
+  font-size: 1.15rem;
+}
+
+/* Expand main content area smoothly when collapsed */
+body.sidebar-collapsed .admin-sidebar + main,
+body.sidebar-collapsed .admin-sidebar ~ main {
+  width: calc(100% - 72px) !important;
+  max-width: calc(100% - 72px) !important;
+  flex: 0 0 calc(100% - 72px) !important;
+  transition: width .25s ease, max-width .25s ease, flex-basis .25s ease;
+}
+
+/* Keep header/toggle padding comfortable in both states */
+body.sidebar-collapsed .admin-sidebar .sidebar-header {
+  padding-left: .25rem !important;
+  padding-right: .25rem !important;
+}
