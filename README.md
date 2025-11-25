@@ -78,7 +78,7 @@ Admin dapat melihat daftar user dan memblokir akses jika diperlukan.
 
 ---
 
-## 💻 Teknologi yang Digunakan
+## Teknologi yang Digunakan
 *   **Bahasa Pemrograman**: PHP Native
 *   **Database**: MySQL (MariaDB)
 *   **Frontend**: HTML, CSS, Bootstrap 5
@@ -86,7 +86,12 @@ Admin dapat melihat daftar user dan memblokir akses jika diperlukan.
 
 ---
 
-## 👨‍💻 Identitas Pengembang
+## Identitas Pengembang
 *   **Nama**: Muhammad Daffa
 *   **NIM**: 221011400800
 *   **Kelas**: 07TPLP020
+
+
+## admin
+admin
+123
