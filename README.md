@@ -91,7 +91,8 @@ Admin dapat melihat daftar user dan memblokir akses jika diperlukan.
 *   **NIM**: 221011400800
 *   **Kelas**: 07TPLP020
 
+---
 
-## admin
+## Admin
 admin
 123
