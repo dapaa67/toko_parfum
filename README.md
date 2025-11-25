@@ -31,54 +31,57 @@ Berikut adalah dokumentasi tampilan dan alur penggunaan aplikasi:
 User harus login terlebih dahulu untuk melakukan transaksi.
 *(Pastikan user sudah terdaftar dan aktif)*
 
-![Login Page](img_project/1.png)
-![Register Page](img_project/2.png)
+![Login Page](img_project/login.png)
+![Register Page](img_project/registrasi.png)
 
-### 2. Katalog & Detail Produk
-User dapat melihat berbagai koleksi parfum dan melihat detailnya sebelum membeli.
+### 2. Halaman Utama & Katalog
+Tampilan awal toko dan daftar produk yang tersedia.
 
-![Katalog Produk](img_project/3.png)
-![Detail Produk](img_project/4.png)
+![Home Page](img_project/home.png)
+![Katalog Produk](img_project/produk.png)
+![Detail Produk](img_project/detail_produk.png)
 
 ### 3. Keranjang & Checkout
 Proses memasukkan barang ke keranjang dan melakukan checkout pesanan.
 
-![Keranjang Belanja](img_project/5.png)
-![Halaman Checkout](img_project/6.png)
+![Keranjang Belanja](img_project/keranjang.png)
+![Proses Checkout](img_project/proses_Checkout.png)
+![Checkout Berhasil](img_project/checkout_berhasil.png)
 
-### 4. Proses Pembayaran & Upload Bukti
-Setelah checkout, user melakukan transfer dan mengupload bukti pembayaran melalui fitur **Konfirmasi Pembayaran**.
+### 4. Konfirmasi Pembayaran
+User mengupload bukti pembayaran melalui modal popup.
 
-![Instruksi Bayar](img_project/7.png)
-![Modal Upload Bukti](img_project/8.png)
-![Status Menunggu Konfirmasi](img_project/9.png)
+![Upload Bukti Pembayaran](img_project/upload_bukti_pembayaran.png)
 
-### 5. Halaman Admin - Dashboard & Produk
+### 5. Halaman Informasi
+Halaman pendukung untuk informasi toko dan perusahaan.
+
+![Halaman Toko](img_project/halaman_toko.png)
+![Halaman Perusahaan](img_project/halaman_perusahaan.png)
+![Halaman Kontak](img_project/halaman_kontak.png)
+
+### 6. Halaman Admin - Dashboard & Produk
 Admin memantau aktivitas toko dan mengelola stok barang.
 
-![Admin Dashboard](img_project/10.png)
-![Manajemen Produk](img_project/11.png)
+![Admin Dashboard](img_project/dashboard_admin.png)
+![Manajemen Produk](img_project/Produk_Admin.png)
+![Tambah Produk](img_project/tambah_produk_admin.png)
 
-### 6. Admin - Verifikasi Pembayaran
-Admin menerima notifikasi pesanan baru, mengecek bukti transfer, dan menyetujui pesanan.
+### 7. Admin - Kelola Banner & User
+Admin dapat mengatur banner promosi dan mengelola data user.
 
-![List Pesanan Masuk](img_project/12.png)
-![Cek Bukti Transfer](img_project/14.png)
+![Kelola Banner](img_project/kelola_banner_admin.png)
+![Kelola User](img_project/kelola_users_(admin).png)
+![Detail User](img_project/Detail_users_(admin).png)
 
-### 7. Laporan Penjualan (Sales Report)
+### 8. Laporan Penjualan (Sales Report)
 **[PENTING]** Admin memiliki fitur rekapan penjualan untuk melihat omzet dan detail produk yang terjual.
 
-![Laporan Penjualan](img_project/15.png)
-![Detail Laporan](img_project/16.png)
-
-### 8. Manajemen User
-Admin dapat melihat daftar user dan memblokir akses jika diperlukan.
-
-![Manajemen User](img_project/17.png)
+![Laporan Penjualan](img_project/laporan_penjualan_admin.png)
 
 ---
 
-## Teknologi yang Digunakan
+## 💻 Teknologi yang Digunakan
 *   **Bahasa Pemrograman**: PHP Native
 *   **Database**: MySQL (MariaDB)
 *   **Frontend**: HTML, CSS, Bootstrap 5
@@ -86,13 +89,7 @@ Admin dapat melihat daftar user dan memblokir akses jika diperlukan.
 
 ---
 
-## Identitas Pengembang
+## 👨‍💻 Identitas Pengembang
 *   **Nama**: Muhammad Daffa
 *   **NIM**: 221011400800
 *   **Kelas**: 07TPLP020
-
----
-
-## Admin
-admin
-123
