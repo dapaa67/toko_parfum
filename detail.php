@@ -46,16 +46,29 @@ if (!$imgSrc || !file_exists($imgSrc)) {
                 <p class="text-muted fs-5"><?php echo $parfum->getMerek(); ?> | <?php echo $parfum->getKategori(); ?></p>
                 <p><?php echo htmlspecialchars($parfum->getUkuran()); ?>ml | <?php echo htmlspecialchars($parfum->getGender()); ?></p>
                 <p class="text-justify"><?php echo $parfum->getDeskripsi() ? htmlspecialchars($parfum->getDeskripsi()) : 'Deskripsi belum tersedia.'; ?></p>
-                
+
                 <div class="mt-4">
-                    <h4>Beli Kuy!</h4>
-                    <div class="btn-group">
-                        <a href="https://shopee.co.id/" class="btn btn-shopee btn-sm shop-now-btn" target="_blank">Shopee</a>
-                        
-                        <a href="https://www.tokopedia.com/" class="btn btn-success btn-sm shop-now-btn" target="_blank">Tokopedia</a>
-                        
-                        <a href="https://www.tiktok.com/" class="btn btn-tiktok btn-sm" target="_blank">Tiktok Shop</a>
-                    </div>
+                    <h3 class="product-price mb-3">Rp <?php echo number_format($parfum->getHarga(), 0, ',', '.'); ?></h3>
+
+                    <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'user'): ?>
+                        <form action="cart_action.php" method="POST">
+                            <input type="hidden" name="action" value="add">
+                            <input type="hidden" name="product_id" value="<?php echo $parfum->getId(); ?>">
+                            <div class="row align-items-center">
+                                <div class="col-md-4 mb-3 mb-md-0">
+                                    <label for="quantity" class="form-label">Jumlah:</label>
+                                    <input type="number" name="quantity" id="quantity" class="form-control" value="1" min="1" max="<?php echo $parfum->getStok(); ?>">
+                                </div>
+                                <div class="col-md-8">
+                                    <button type="submit" class="btn btn-primary btn-lg w-100"><i class="bi bi-cart-plus-fill"></i> Tambah ke Keranjang</button>
+                                </div>
+                            </div>
+                        </form>
+                    <?php else: ?>
+                        <div class="alert alert-info">
+                            Silakan <a href="login.php" class="alert-link">login</a> sebagai user untuk mulai berbelanja.
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

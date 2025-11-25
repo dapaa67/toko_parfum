@@ -1,115 +1,92 @@
-# Toko Parfum — E-Commerce Sederhana (PHP + MySQL)
+# Toko Parfum Online - Web Application
 
-Proyek ini adalah aplikasi katalog dan penjualan parfum sederhana berbasis PHP Native dan MySQL. Fokusnya pada kecepatan, kemudahan deploy di XAMPP, dan panel admin untuk kelola produk, banner, serta konten dasar.
+Aplikasi berbasis web untuk penjualan parfum secara online. Sistem ini mencakup fitur lengkap untuk **Pelanggan** (User) dan **Administrator** (Admin), mulai dari registrasi, transaksi pembelian, hingga laporan penjualan.
 
-Bagian ini menyertakan pratinjau hasil akhir yang tersimpan di folder gambar proyek.
+---
 
+## 📋 Fitur Utama
 
-Fitur Utama
+### 👤 Halaman Pengguna (User)
+1.  **Registrasi & Login**: Keamanan akses menggunakan akun pribadi.
+2.  **Katalog Produk**: Menampilkan daftar parfum dengan harga dan deskripsi.
+3.  **Keranjang Belanja (Cart)**: Menampung barang sebelum checkout.
+4.  **Checkout & Pembayaran**: Proses pemesanan dan instruksi pembayaran.
+5.  **Konfirmasi Pembayaran**: Upload bukti transfer via modal popup.
+6.  **Riwayat Pesanan**: Memantau status pesanan (Pending, Menunggu Konfirmasi, Dikirim, Selesai).
 
-- Katalog parfum lengkap dengan kategori dan halaman detail produk.
-- Banner carousel dinamis di beranda.
-- Halaman informasi perusahaan dan lokasi toko.
-- Halaman kontak sederhana.
-- Autentikasi dan area admin untuk mengelola konten.
-- Manajemen produk dari panel admin.
-- Antarmuka responsif dengan CSS kustom.
+### 🛠 Halaman Admin
+1.  **Dashboard**: Ringkasan statistik toko.
+2.  **Manajemen Produk**: Tambah, edit, dan hapus data parfum.
+3.  **Konfirmasi Pesanan**: Verifikasi bukti pembayaran dari user.
+4.  **Laporan Penjualan**: Rekapan detail transaksi yang berhasil.
+5.  **Manajemen User**: Mengelola akun pengguna (Ban/Unban).
 
-Teknologi & Prasyarat
+---
 
-- PHP 8.x atau lebih baru
-- MySQL 5.7+ atau MariaDB
-- XAMPP (Apache + MySQL) di Windows
-- Browser modern
+## 📸 Dokumentasi & Alur Aplikasi
 
-Struktur Proyek
+Berikut adalah dokumentasi tampilan dan alur penggunaan aplikasi:
 
-- [index.php](index.php) beranda dan carousel.
-- [products.php](products.php) daftar produk.
-- [detail.php](detail.php) halaman detail produk.
-- [stores.php](stores.php) lokasi atau daftar toko.
-- [company.php](company.php) profil perusahaan.
-- [contact.php](contact.php) halaman kontak.
-- [login.php](login.php) halaman login.
-- [logout.php](logout.php) keluar sesi.
-- [admin/dashboard.php](admin/dashboard.php) dashboard admin.
-- [admin/products.php](admin/products.php) kelola produk.
-- [admin/carousel.php](admin/carousel.php) kelola banner carousel.
-- [admin/includes/sidebar.php](admin/includes/sidebar.php) dan [admin/includes/footer.php](admin/includes/footer.php) komponen admin.
-- [views/header.php](views/header.php) dan [views/footer.php](views/footer.php) komponen frontend.
-- [css/style.css](css/style.css) gaya utama, [sidebar.css](sidebar.css) gaya sidebar, [sidebar.js](sidebar.js) interaksi sidebar.
-- [models/DB.php](models/DB.php) koneksi database.
-- [models/Parfum.php](models/Parfum.php) entitas produk parfum.
-- [models/ParfumManager.php](models/ParfumManager.php) operasi data parfum.
-- [models/AuthManager.php](models/AuthManager.php) autentikasi pengguna.
-- [models/CarouselManager.php](models/CarouselManager.php) data carousel.
-- [models/AboutUsManager.php](models/AboutUsManager.php) data profil perusahaan.
-- [toko_parfum.sql](toko_parfum.sql) skema dan data awal database.
-- [seed_products.php](seed_products.php) skrip seeding opsional.
-- Folder aset: [img/](img/), [img/products/](img/products/), [img/carousel/](img/carousel/), [img project/](img%20project/), [css/](css/).
+### 1. Login & Registrasi
+User harus login terlebih dahulu untuk melakukan transaksi.
+*(Pastikan user sudah terdaftar dan aktif)*
 
-Instalasi Cepat (XAMPP)
+![Login Page](img_project/1.png)
+![Register Page](img_project/2.png)
 
-1. Pastikan Apache dan MySQL aktif di XAMPP.
-2. Salin folder proyek ini ke C:\xampp\htdocs dengan nama toko_parfum sehingga dapat diakses di http://localhost/toko_parfum/.
-3. Buat database baru bernama toko_parfum di phpMyAdmin.
-4. Import berkas [toko_parfum.sql](toko_parfum.sql) ke database tersebut.
-5. Buka berkas [models/DB.php](models/DB.php) lalu sesuaikan konfigurasi koneksi database (host, nama database, username, dan password).
-6. Opsional: jalankan seeder produk dengan membuka URL http://localhost/toko_parfum/seed_products.php untuk mengisi data contoh.
-7. Akses aplikasi di browser melalui http://localhost/toko_parfum/.
+### 2. Katalog & Detail Produk
+User dapat melihat berbagai koleksi parfum dan melihat detailnya sebelum membeli.
 
-Akses Admin
+![Katalog Produk](img_project/3.png)
+![Detail Produk](img_project/4.png)
 
-- Halaman login: [login.php](login.php).
-- Setelah berhasil login, panel admin tersedia di [admin/dashboard.php](admin/dashboard.php), kelola produk di [admin/products.php](admin/products.php), dan kelola banner di [admin/carousel.php](admin/carousel.php).
-- Kredensial default tidak disertakan. Jika Anda perlu membuat pengguna admin:
-  - Gunakan [get_hash.php](get_hash.php) untuk menghasilkan hash kata sandi lalu simpan ke tabel pengguna melalui phpMyAdmin.
-  - Atau tambahkan user langsung via SQL sesuai struktur pada [toko_parfum.sql](toko_parfum.sql).
+### 3. Keranjang & Checkout
+Proses memasukkan barang ke keranjang dan melakukan checkout pesanan.
 
-Navigasi Halaman Utama
+![Keranjang Belanja](img_project/5.png)
+![Halaman Checkout](img_project/6.png)
 
-- Beranda: [index.php](index.php)
-- Produk: [products.php](products.php)
-- Detail Produk: [detail.php](detail.php)
-- Toko: [stores.php](stores.php)
-- Tentang Perusahaan: [company.php](company.php)
-- Kontak: [contact.php](contact.php)
+### 4. Proses Pembayaran & Upload Bukti
+Setelah checkout, user melakukan transfer dan mengupload bukti pembayaran melalui fitur **Konfirmasi Pembayaran**.
 
-Pratinjau UI (Screenshots)
+![Instruksi Bayar](img_project/7.png)
+![Modal Upload Bukti](img_project/8.png)
+![Status Menunggu Konfirmasi](img_project/9.png)
 
-[![Home](img%20project/home.png)](img%20project/home.png)
+### 5. Halaman Admin - Dashboard & Produk
+Admin memantau aktivitas toko dan mengelola stok barang.
 
-[![Toko](img%20project/toko.png)](img%20project/toko.png)
+![Admin Dashboard](img_project/10.png)
+![Manajemen Produk](img_project/11.png)
 
-[![Kontak](img%20project/kontak.png)](img%20project/kontak.png)
+### 6. Admin - Verifikasi Pembayaran
+Admin menerima notifikasi pesanan baru, mengecek bukti transfer, dan menyetujui pesanan.
 
-[![Login Admin](img%20project/login%20admin.png)](img%20project/login%20admin.png)
+![List Pesanan Masuk](img_project/12.png)
+![Cek Bukti Transfer](img_project/14.png)
 
-[![Dashboard Admin](img%20project/dashboard%20admin.png)](img%20project/dashboard%20admin.png)
+### 7. Laporan Penjualan (Sales Report)
+**[PENTING]** Admin memiliki fitur rekapan penjualan untuk melihat omzet dan detail produk yang terjual.
 
-[![Produk Admin](img%20project/produk%20admin.png)](img%20project/produk%20admin.png)
+![Laporan Penjualan](img_project/15.png)
+![Detail Laporan](img_project/16.png)
 
-[![Banner Admin](img%20project/banner%20admin.png)](img%20project/banner%20admin.png)
+### 8. Manajemen User
+Admin dapat melihat daftar user dan memblokir akses jika diperlukan.
 
-Tips Produksi dan Keamanan
+![Manajemen User](img_project/17.png)
 
-- Selalu gunakan password yang kuat dan simpan hash, bukan teks asli. Lihat [get_hash.php](get_hash.php) untuk membantu membuat hash.
-- Lindungi folder admin dengan autentikasi yang ketat di sisi server.
-- Validasi dan sanitasi semua input pengguna sebelum disimpan ke database.
-- Konfigurasikan pengunggahan gambar agar hanya menerima tipe file aman dan ukuran wajar.
-- Matikan display_errors di produksi dan catat error ke log server.
+---
 
-Troubleshooting
+## 💻 Teknologi yang Digunakan
+*   **Bahasa Pemrograman**: PHP Native
+*   **Database**: MySQL (MariaDB)
+*   **Frontend**: HTML, CSS, Bootstrap 5
+*   **Server**: Apache (XAMPP)
 
-- Koneksi database gagal: cek kredensial di [models/DB.php](models/DB.php) dan pastikan layanan MySQL aktif.
-- Halaman kosong atau error 500: aktifkan log error Apache dan periksa konfigurasi PHP.
-- Aset (CSS/JS/Gambar) 404: pastikan jalur relatif benar dan file tersalin lengkap.
-- Gambar tidak muncul: periksa nama file, ekstensi, serta izin baca pada folder [img/](img/).
+---
 
-Lisensi
-
-Proyek ini tidak menyertakan lisensi terbuka. Gunakan untuk pembelajaran atau kembangkan secara internal sesuai kebutuhan.
-
-Kredit
-
-UI, konten, dan aset gambar sesuai dengan berkas yang ada di folder proyek ini. Terima kasih kepada semua pihak yang berkontribusi.
+## 👨‍💻 Identitas Pengembang
+*   **Nama**: Muhammad Daffa
+*   **NIM**: 221011400800
+*   **Kelas**: 07TPLP020

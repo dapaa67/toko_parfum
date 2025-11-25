@@ -12,6 +12,10 @@ class DB {
         try {
             $this->pdo = new PDO($dsn, $this->user, $this->pass);
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            // Kurangi waktu tunggu lock agar tidak menggantung sampai 120 detik
+            // Default InnoDB biasanya 50s; di sini kita turunkan jadi 5s per query.
+            $this->pdo->exec("SET SESSION innodb_lock_wait_timeout = 5");
         } catch (PDOException $e) {
             die("Koneksi Database Gagal: " . $e->getMessage());
         }

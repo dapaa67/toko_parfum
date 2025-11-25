@@ -75,8 +75,7 @@ body {
 
 /* Carousel Styles */
 .carousel-item img {
-    max-height: 800px;
-    object-fit: cover;
+    /* Biarkan tinggi gambar otomatis menyesuaikan lebar */
 }
 
 .carousel-indicators [data-bs-target] {
@@ -428,4 +427,31 @@ a.card-link {
   max-width: 720px;
   margin-left: auto;
   margin-right: auto;
+}
+
+/* Custom Navbar Style (to match footer) */
+.navbar-custom-footer-style {
+    background-color: #000000 !important; /* Match footer background */
+}
+ 
+.navbar-custom-footer-style .nav-link {
+    color: #fff; /* Teks link default putih, seperti di footer */
+    transition: color 0.2s ease-in-out;
+}
+ 
+.navbar-custom-footer-style .nav-link:hover,
+.navbar-custom-footer-style .nav-link.active,
+.navbar-custom-footer-style .dropdown-item:hover {
+    color: #DAA520 !important; /* Match footer accent color */
+}
+ 
+.navbar-custom-footer-style .btn-outline-light {
+    --bs-btn-color: #DAA520;
+    --bs-btn-border-color: #DAA520;
+    --bs-btn-hover-color: #000;
+    --bs-btn-hover-bg: #DAA520;
+    --bs-btn-hover-border-color: #DAA520;
+    --bs-btn-active-color: #000;
+    --bs-btn-active-bg: #DAA520;
+    --bs-btn-active-border-color: #DAA520;
 }

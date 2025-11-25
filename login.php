@@ -15,6 +15,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Arahkan Admin ke Dashboard CRUD
         header('Location: admin/dashboard.php');
         exit();
+    } else if ($role === 'user') {
+        // Arahkan User ke Halaman Utama
+        header('Location: index.php');
+        exit();
     } else {
         $error = 'Username atau password salah.';
     }
@@ -91,14 +95,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <div class="row g-0">
                         
                         <div class="col-md-6 login-img-col d-flex flex-column justify-content-center p-4 p-md-5">
-                            <h2 class="fw-bold">Admin Access</h2>
-                            <p class="lead mb-0">Manage your perfume inventory, update stock, and view orders.</p>
+                            <h2 class="fw-bold">Selamat Datang</h2>
+                            <p class="lead mb-0">Masuk untuk melanjutkan belanja, melihat riwayat pesanan, dan mengelola akun Anda.</p>
                         </div>
                         
                         <div class="col-md-6 form-col">
                             <div class="card-body p-4 p-md-5">
                                 
-                                <h3 class="fw-bold mb-4 text-center">Admin Login</h3>
+                                <h3 class="fw-bold mb-4 text-center">Login Akun</h3>
                                 
                                 <?php if ($error): ?>
                                     <div class="alert alert-danger"><?php echo $error; ?></div>
@@ -109,8 +113,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         <label for="username" class="form-label">Username</label>
                                         <input type="text" class="form-control" id="username" name="username" required>
                                     </div>
-                                    
-                                    <div class="mb-3 position-relative">
+                       
+                                                 <div class="mb-3 position-relative">
                                         <label for="password" class="form-label">Password</label>
                                         <input type="password" class="form-control" id="password" name="password" required>
                                         <button type="button" class="btn btn-sm btn-outline-secondary toggle-password-btn position-absolute top-50 end-0 translate-middle-y me-2" id="togglePassword" aria-label="Show password" style="margin-top: 19px;"> <i class="bi bi-eye"></i>
@@ -122,6 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 
                                 <div class="mt-3 text-center">
                                     <small>Kembali ke <a class="text-decoration-none" href="index.php">Halaman Utama</a></small>
+                                    <small class="d-block mt-1">Belum punya akun? <a href="register.php" class="text-decoration-none">Daftar di sini</a></small>
                                 </div>
                             </div>
                         </div> </div> </div> </div> </div> </div> <script>

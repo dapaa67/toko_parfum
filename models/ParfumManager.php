@@ -1,9 +1,9 @@
 <?php
 // models/ParfumManager.php
 
-// Pastikan file DB.php sudah di-include
-require_once 'DB.php';
-require_once 'Parfum.php';
+// Pastikan file DB.php & Parfum.php di-include dengan path yang benar
+require_once __DIR__ . '/DB.php';
+require_once __DIR__ . '/Parfum.php';
 
 class ParfumManager {
     private $db; // Instance DB
@@ -119,6 +119,25 @@ class ParfumManager {
         $sql = "DELETE FROM parfums WHERE id = ?";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([$id]);
+    }
+
+    // Metode untuk update cepat (hanya harga dan stok)
+    public function quickUpdate($id, $harga, $stok): bool {
+        $sql = "UPDATE parfums SET harga = ?, stok = ? WHERE id = ?";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([(int)$harga, (int)$stok, (int)$id]);
+    }
+
+
+    // Metode untuk mengurangi stok setelah pembelian
+    public function updateStock($productId, $quantitySold) {
+        // Gunakan klausa WHERE untuk memastikan stok tidak menjadi negatif
+        $sql = "UPDATE parfums SET stok = stok - ? WHERE id = ? AND stok >= ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$quantitySold, $productId, $quantitySold]);
+        // Kembalikan true HANYA jika 1 baris terpengaruh.
+        // Ini memastikan stok benar-benar berkurang dan cukup.
+        return $stmt->rowCount() > 0;
     }
 
     // R (Read): Mengambil beberapa data Parfum secara acak

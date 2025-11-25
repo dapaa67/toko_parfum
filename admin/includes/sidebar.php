@@ -3,43 +3,52 @@
 $currentPage = basename($_SERVER['PHP_SELF']);
 ?>
 <!-- Sidebar (Bootstrap 5) -->
-<nav class="col-md-3 col-lg-2 d-none d-md-block admin-sidebar">
-  <div class="position-sticky pt-3" style="top: 56px;">
-    <!-- Header with brand and collapsible toggle -->
-    <div class="sidebar-header d-flex align-items-center justify-content-between px-3 pb-2">
-      <a class="brand d-flex align-items-center gap-2 text-decoration-none" href="dashboard.php">
-        <i class="bi bi-flower2"></i>
-        <span class="brand-text">Admin</span>
-      </a>
-      <button type="button" class="btn btn-sm sidebar-toggle" id="sidebarToggle" data-sidebar-toggle aria-label="Toggle sidebar">
-        <i class="bi bi-chevron-double-left"></i>
-      </button>
+<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block admin-sidebar collapse">
+  <div class="position-sticky pt-3">
+    <div class="sidebar-header px-3 pb-3 mb-3 border-bottom border-secondary">
+      <span class="text-uppercase text-muted small fw-bold">Menu</span>
     </div>
 
-    <ul class="nav nav-pills flex-column mb-auto">
+    <ul class="nav flex-column px-2">
       <li class="nav-item">
-        <a class="nav-link d-flex align-items-center gap-2 <?php echo ($currentPage == 'dashboard.php') ? 'active' : ''; ?>" href="dashboard.php" aria-current="<?php echo ($currentPage == 'dashboard.php') ? 'page' : 'false'; ?>">
-          <i class="bi bi-speedometer2"></i><span class="item-text">Dashboard</span>
+        <a class="nav-link <?php echo ($currentPage == 'dashboard.php') ? 'active' : ''; ?>" href="dashboard.php">
+          <i class="bi bi-speedometer2"></i> Dashboard
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link d-flex align-items-center gap-2 <?php echo ($currentPage == 'carousel.php') ? 'active' : ''; ?>" href="carousel.php" aria-current="<?php echo ($currentPage == 'carousel.php') ? 'page' : 'false'; ?>">
-          <i class="bi bi-images"></i><span class="item-text">Banner</span>
+        <a class="nav-link <?php echo ($currentPage == 'products.php' || $currentPage == 'product_form.php') ? 'active' : ''; ?>" href="products.php">
+          <i class="bi bi-box-seam"></i> Products
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link d-flex align-items-center gap-2 <?php echo ($currentPage == 'products.php') ? 'active' : ''; ?>" href="products.php" aria-current="<?php echo ($currentPage == 'products.php') ? 'page' : 'false'; ?>">
-          <i class="bi bi-box-seam"></i><span class="item-text">Produk</span>
-        </a>
-      </li>
-      <li class="nav-item mt-2">
-        <a class="nav-link d-flex align-items-center gap-2" href="../index.php">
-          <i class="bi bi-shop-window"></i><span class="item-text">Lihat Toko</span>
+        <a class="nav-link <?php echo ($currentPage == 'carousel.php') ? 'active' : ''; ?>" href="carousel.php">
+          <i class="bi bi-images"></i> Banner / Carousel
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link d-flex align-items-center gap-2" href="../logout.php">
-          <i class="bi bi-box-arrow-right"></i><span class="item-text">Logout</span>
+        <a class="nav-link <?php echo ($currentPage == 'sales_report.php') ? 'active' : ''; ?>" href="sales_report.php">
+          <i class="bi bi-bar-chart-line"></i> Sales Report
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link <?php echo ($currentPage == 'users.php') ? 'active' : ''; ?>" href="users.php">
+          <i class="bi bi-people"></i> Users
+        </a>
+      </li>
+    </ul>
+
+    <div class="sidebar-heading px-3 mt-4 mb-2 text-uppercase text-muted small fw-bold">
+      <span>Links</span>
+    </div>
+    <ul class="nav flex-column px-2 mb-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="../index.php" target="_blank">
+          <i class="bi bi-shop-window"></i> View Store
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-danger" href="../logout.php">
+          <i class="bi bi-box-arrow-right"></i> Logout
         </a>
       </li>
     </ul>
