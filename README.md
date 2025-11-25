@@ -94,5 +94,5 @@ Admin dapat melihat daftar user dan memblokir akses jika diperlukan.
 ---
 
 ## Admin
-admin
-123
+*   **username**: admin
+*   **password**: 123
