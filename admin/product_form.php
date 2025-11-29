@@ -23,6 +23,9 @@ if (isset($_GET['id'])) {
         exit();
     }
 }
+
+// Fetch distinct categories for datalist
+$existingCategories = $parfumManager->getDistinctKategori();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -32,6 +35,7 @@ if (isset($_GET['id'])) {
     <title><?php echo $pageTitle; ?> - Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="admin.css">
 </head>
 <body>
@@ -93,7 +97,16 @@ if (isset($_GET['id'])) {
                             </div>
                             <div class="col-md-6">
                                 <label for="kategori" class="form-label">Kategori</label>
-                                <input type="text" class="form-control" id="kategori" name="kategori" value="<?php echo htmlspecialchars($parfum->getKategori() ?? ''); ?>">
+                                <input type="text" class="form-control" id="kategori" name="kategori" 
+                                       list="kategori-suggestions" 
+                                       placeholder="Pilih atau ketik kategori"
+                                       value="<?php echo htmlspecialchars($parfum->getKategori() ?? ''); ?>">
+                                <datalist id="kategori-suggestions">
+                                    <?php foreach ($existingCategories as $cat): ?>
+                                        <option value="<?php echo htmlspecialchars($cat); ?>">
+                                    <?php endforeach; ?>
+                                </datalist>
+                                <small class="text-muted">Pilih dari daftar atau ketik kategori baru</small>
                             </div>
                             <div class="col-md-6">
                                 <label for="gender" class="form-label">Gender</label>
@@ -161,5 +174,64 @@ if (isset($_GET['id'])) {
 <?php include 'includes/footer.php'; ?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../sidebar.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Number formatting for price and stock inputs
+    const hargaInput = document.getElementById('harga');
+    const stokInput = document.getElementById('stok');
+    
+    function formatNumber(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    }
+    
+    function addNumberFormatting(input) {
+        if (!input) return;
+        
+        const wrapper = document.createElement('div');
+        wrapper.style.position = 'relative';
+        wrapper.style.flex = '1';
+        
+        const overlay = document.createElement('div');
+        overlay.className = 'form-control';
+        overlay.style.position = 'absolute';
+        overlay.style.top = '0';
+        overlay.style.left = '0';
+        overlay.style.right = '0';
+        overlay.style.bottom = '0';
+        overlay.style.pointerEvents = 'none';
+        overlay.style.backgroundColor = 'white';
+        overlay.style.zIndex = '1';
+        overlay.textContent = formatNumber(parseInt(input.value) || 0);
+        
+        // Insert wrapper
+        const parent = input.parentNode;
+        parent.insertBefore(wrapper, input);
+        wrapper.appendChild(input);
+        wrapper.appendChild(overlay);
+        
+        // Hide overlay on focus
+        input.addEventListener('focus', function() {
+            overlay.style.display = 'none';
+        });
+        
+        // Show overlay on blur with updated value
+        input.addEventListener('blur', function() {
+            const val = parseInt(input.value) || 0;
+            overlay.textContent = formatNumber(val);
+            overlay.style.display = 'block';
+        });
+        
+        // Update on change
+        input.addEventListener('change', function() {
+            const val = parseInt(input.value) || 0;
+            overlay.textContent = formatNumber(val);
+        });
+    }
+    
+    addNumberFormatting(hargaInput);
+    addNumberFormatting(stokInput);
+});
+</script>
 </body>
 </html>
+

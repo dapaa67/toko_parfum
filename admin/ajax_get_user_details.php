@@ -99,7 +99,7 @@ if (!$user) {
                         <td>Rp <?php echo number_format($order['total_harga'], 0, ',', '.'); ?></td>
                         <td><span class="badge <?php echo $statusClass; ?> rounded-pill"><?php echo htmlspecialchars($order['status']); ?></span></td>
                         <td class="text-end">
-                            <button class="btn btn-xs btn-outline-primary view-details-btn" data-order-id="<?php echo $order['id']; ?>" data-bs-toggle="modal" data-bs-target="#orderDetailsModal">
+                            <button class="btn btn-xs btn-outline-primary view-details-btn" data-order-id="<?php echo $order['id']; ?>" data-user-id="<?php echo $userId; ?>" data-bs-toggle="modal" data-bs-target="#orderDetailsModal">
                                 <i class="bi bi-eye"></i>
                             </button>
                         </td>

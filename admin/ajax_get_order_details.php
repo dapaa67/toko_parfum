@@ -75,20 +75,12 @@ $order = $orderManager->getOrderById($orderId);
         
         <?php if ($order['status'] === 'Menunggu Konfirmasi'): ?>
             <div class="d-flex justify-content-end gap-2">
-                <form action="process_payment.php" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menolak pembayaran ini?');">
-                    <input type="hidden" name="order_id" value="<?php echo $orderId; ?>">
-                    <input type="hidden" name="action" value="reject">
-                    <button type="submit" class="btn btn-danger">
-                        <i class="bi bi-x-circle"></i> Tolak
-                    </button>
-                </form>
-                <form action="process_payment.php" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menyetujui pembayaran ini?');">
-                    <input type="hidden" name="order_id" value="<?php echo $orderId; ?>">
-                    <input type="hidden" name="action" value="approve">
-                    <button type="submit" class="btn btn-success">
-                        <i class="bi bi-check-circle"></i> Setujui Pembayaran
-                    </button>
-                </form>
+                <button type="button" class="btn btn-danger" onclick="showRejectModal(<?php echo $orderId; ?>)">
+                    <i class="bi bi-x-circle me-1"></i> Tolak Pembayaran
+                </button>
+                <button type="button" class="btn btn-success" onclick="showApproveModal(<?php echo $orderId; ?>)">
+                    <i class="bi bi-check-circle me-1"></i> Setujui Pembayaran
+                </button>
             </div>
         <?php endif; ?>
     </div>
@@ -99,12 +91,8 @@ $order = $orderManager->getOrderById($orderId);
 if ($order['metode_pembayaran'] === 'Cash on Delivery (COD)' && $order['status'] === 'Pending'): 
 ?>
     <div class="mt-4 text-end">
-        <form action="process_payment.php" method="POST" onsubmit="return confirm('Apakah Anda yakin pesanan COD ini sudah selesai/dibayar?');">
-            <input type="hidden" name="order_id" value="<?php echo $orderId; ?>">
-            <input type="hidden" name="action" value="complete_cod">
-            <button type="submit" class="btn btn-success">
-                <i class="bi bi-check2-circle"></i> Selesaikan Pesanan (COD)
-            </button>
-        </form>
+        <button type="button" class="btn btn-success" onclick="showCompleteCodModal(<?php echo $orderId; ?>)">
+            <i class="bi bi-check2-circle me-1"></i> Selesaikan Pesanan (COD)
+        </button>
     </div>
 <?php endif; ?>

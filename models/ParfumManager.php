@@ -313,8 +313,19 @@ class ParfumManager {
         return $row ? (int)$row['cnt'] : 0;
     }
 
+    // Get distinct categories from database for dynamic filter
+    public function getDistinctKategori(): array {
+        $sql = "SELECT DISTINCT kategori FROM parfums WHERE kategori IS NOT NULL AND kategori != '' ORDER BY kategori ASC";
+        $stmt = $this->conn->query($sql);
+        $categories = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $categories[] = $row['kategori'];
+        }
+        return $categories;
+    }
+
     // Read paginated rows with filters using LIMIT/OFFSET
-    public function readPaginated(int $page, int $perPage, $q = '', $kategori = '', $gender = '', $ukuran = '', $best = ''): array {
+    public function readPaginated(int $page, int $perPage, $q = '', $kategori = '', $gender = '', $ukuran = '', $best = '', $sort_by = ''): array {
         $offset = max(0, ($page - 1) * $perPage);
         $sql = "SELECT * FROM parfums WHERE 1=1";
         $params = [];
@@ -337,7 +348,17 @@ class ParfumManager {
         if ($best === '1') {
             $sql .= " AND is_best_seller = 1";
         }
-        $sql .= " ORDER BY id DESC LIMIT :limit OFFSET :offset";
+        
+        // Dynamic ORDER BY based on sort_by parameter
+        if ($sort_by === 'price_asc') {
+            $sql .= " ORDER BY harga ASC";
+        } elseif ($sort_by === 'price_desc') {
+            $sql .= " ORDER BY harga DESC";
+        } else {
+            $sql .= " ORDER BY id DESC";
+        }
+        
+        $sql .= " LIMIT :limit OFFSET :offset";
         $stmt = $this->conn->prepare($sql);
 
         // Bind filter params

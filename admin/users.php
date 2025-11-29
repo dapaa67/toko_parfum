@@ -21,7 +21,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_id'], $_POST['ac
     exit();
 }
 
-$users = $userManager->getAllUsers();
+// Pagination
+$usersPerPage = 15;
+$currentPage = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+
+$allUsers = $userManager->getAllUsers();
+$totalUsers = count($allUsers);
+$totalPages = ceil($totalUsers / $usersPerPage);
+$offset = ($currentPage - 1) * $usersPerPage;
+$users = array_slice($allUsers, $offset, $usersPerPage);
 $pageTitle = "Manajemen User";
 ?>
 <!DOCTYPE html>
@@ -97,7 +105,7 @@ $pageTitle = "Manajemen User";
                         <table class="table table-hover align-middle mb-0">
                             <thead class="table-light">
                                 <tr>
-                                    <th class="ps-4">ID</th>
+                                    <th class="ps-4">No</th>
                                     <th>Username</th>
                                     <th>Nama Lengkap</th>
                                     <th>Email</th>
@@ -114,9 +122,12 @@ $pageTitle = "Manajemen User";
                                         </td>
                                     </tr>
                                 <?php else: ?>
-                                    <?php foreach ($users as $user): ?>
+                                    <?php 
+                                    $rowNumber = $offset + 1;
+                                    foreach ($users as $user): 
+                                    ?>
                                         <tr>
-                                            <td class="ps-4">#<?php echo $user['id']; ?></td>
+                                            <td class="ps-4"><?php echo $rowNumber++; ?></td>
                                             <td class="fw-medium"><?php echo htmlspecialchars($user['username']); ?></td>
                                             <td><?php echo htmlspecialchars($user['full_name'] ?? '-'); ?></td>
                                             <td><?php echo htmlspecialchars($user['email'] ?? '-'); ?></td>
@@ -132,21 +143,13 @@ $pageTitle = "Manajemen User";
                                                     <i class="bi bi-info-circle"></i> Detail
                                                 </button>
                                                 <?php if (isset($user['is_active']) && $user['is_active'] == 0): ?>
-                                                    <form method="POST" class="d-inline" onsubmit="return confirm('Aktifkan kembali user ini?');">
-                                                        <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
-                                                        <input type="hidden" name="action" value="unban">
-                                                        <button type="submit" class="btn btn-sm btn-outline-success">
-                                                            <i class="bi bi-check-circle"></i> Unban
-                                                        </button>
-                                                    </form>
+                                                    <button type="button" class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#unbanModal" data-user-id="<?php echo $user['id']; ?>" data-username="<?php echo htmlspecialchars($user['username']); ?>">
+                                                        <i class="bi bi-check-circle"></i> Unban
+                                                    </button>
                                                 <?php else: ?>
-                                                    <form method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin mem-banned user ini?');">
-                                                        <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
-                                                        <input type="hidden" name="action" value="ban">
-                                                        <button type="submit" class="btn btn-sm btn-outline-danger">
-                                                            <i class="bi bi-slash-circle"></i> Ban
-                                                        </button>
-                                                    </form>
+                                                    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#banModal" data-user-id="<?php echo $user['id']; ?>" data-username="<?php echo htmlspecialchars($user['username']); ?>">
+                                                        <i class="bi bi-slash-circle"></i> Ban
+                                                    </button>
                                                 <?php endif; ?>
                                             </td>
                                         </tr>
@@ -206,6 +209,86 @@ $pageTitle = "Manajemen User";
     </div>
 </div>
 
+<!-- Modal Konfirmasi Ban -->
+<div class="modal fade" id="banModal" tabindex="-1" aria-labelledby="banModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-danger bg-gradient text-white border-0">
+                <h5 class="modal-title fw-bold d-flex align-items-center" id="banModalLabel">
+                    <i class="bi bi-exclamation-triangle-fill me-2 fs-4"></i>
+                    <span>Konfirmasi Ban User</span>
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="text-center mb-3">
+                    <i class="bi bi-person-x-fill text-danger" style="font-size: 3rem;"></i>
+                </div>
+                <p class="text-center mb-2 text-muted">Apakah Anda yakin ingin mem-ban user:</p>
+                <h5 class="text-center fw-bold text-dark mb-4" id="banUsername"></h5>
+                <div class="alert alert-warning border-warning d-flex align-items-center mb-0">
+                    <i class="bi bi-info-circle-fill me-2 fs-5"></i>
+                    <div>
+                        <strong>Perhatian:</strong> User yang dibanned tidak akan bisa login ke sistem.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-light border-0">
+                <form method="POST" id="banForm" class="w-100 d-flex justify-content-end gap-2">
+                    <input type="hidden" name="user_id" id="banUserId">
+                    <input type="hidden" name="action" value="ban">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-1"></i> Batal
+                    </button>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-slash-circle me-1"></i> Ya, Ban User Ini
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Konfirmasi Unban -->
+<div class="modal fade" id="unbanModal" tabindex="-1" aria-labelledby="unbanModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-success bg-gradient text-white border-0">
+                <h5 class="modal-title fw-bold d-flex align-items-center" id="unbanModalLabel">
+                    <i class="bi bi-check-circle-fill me-2 fs-4"></i>
+                    <span>Konfirmasi Aktifkan User</span>
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="text-center mb-3">
+                    <i class="bi bi-person-check-fill text-success" style="font-size: 3rem;"></i>
+                </div>
+                <p class="text-center mb-2 text-muted">Apakah Anda yakin ingin mengaktifkan kembali user:</p>
+                <h5 class="text-center fw-bold text-dark mb-4" id="unbanUsername"></h5>
+                <div class="alert alert-info border-info d-flex align-items-center mb-0">
+                    <i class="bi bi-info-circle-fill me-2 fs-5"></i>
+                    <div>
+                        <strong>Informasi:</strong> User akan dapat login kembali ke sistem setelah diaktifkan.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-light border-0">
+                <form method="POST" id="unbanForm" class="w-100 d-flex justify-content-end gap-2">
+                    <input type="hidden" name="user_id" id="unbanUserId">
+                    <input type="hidden" name="action" value="unban">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-1"></i> Batal
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check-circle me-1"></i> Ya, Aktifkan User Ini
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <?php include 'includes/footer.php'; ?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../sidebar.js"></script>
@@ -258,7 +341,56 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error('Error:', error);
             });
     });
+
+    // Handler untuk Modal Ban
+    var banModal = document.getElementById('banModal');
+    banModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var userId = button.getAttribute('data-user-id');
+        var username = button.getAttribute('data-username');
+        
+        document.getElementById('banUserId').value = userId;
+        document.getElementById('banUsername').textContent = username;
+    });
+
+    // Handler untuk Modal Unban
+    var unbanModal = document.getElementById('unbanModal');
+    unbanModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var userId = button.getAttribute('data-user-id');
+        var username = button.getAttribute('data-username');
+        
+        document.getElementById('unbanUserId').value = userId;
+        document.getElementById('unbanUsername').textContent = username;
+    });
 });
 </script>
+
+<!-- Modal untuk Detail Pesanan -->
+<div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header border-bottom-0 pb-0">
+                <h5 class="modal-title fw-bold" id="orderDetailsModalLabel">Detail Pesanan</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-4" id="modal-body-content">
+                <!-- Konten detail akan dimuat di sini via AJAX -->
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-top-0">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/sales_report.js"></script>
+<?php include 'includes/payment_modals.php'; ?>
+
 </body>
 </html>

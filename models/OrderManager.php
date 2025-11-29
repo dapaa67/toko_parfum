@@ -223,6 +223,7 @@ class OrderManager {
         $sql = "SELECT
                     p.id,
                     p.nama,
+                    p.ukuran,
                     p.image_path,
                     SUM(oi.jumlah) AS total_quantity,
                     SUM(oi.jumlah * oi.harga_saat_beli) AS total_revenue
@@ -242,7 +243,7 @@ class OrderManager {
         }
 
         // Tambahkan LIMIT langsung sebagai integer di SQL
-        $sql .= " GROUP BY p.id, p.nama, p.image_path
+        $sql .= " GROUP BY p.id, p.nama, p.ukuran, p.image_path
                   ORDER BY total_quantity DESC
                   LIMIT " . (int)$limit;
 

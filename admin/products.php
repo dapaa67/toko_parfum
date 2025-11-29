@@ -15,11 +15,15 @@ if (isset($_SESSION['message'])) {
     unset($_SESSION['message'], $_SESSION['message_type']);
 }
 
+// Fetch distinct categories for filter dropdown
+$availableCategories = $parfumManager->getDistinctKategori();
+
 // Logika untuk Filter dan Pagination
 $q        = trim($_GET['q'] ?? '');
 $kategori = $_GET['kategori'] ?? '';
 $gender   = $_GET['gender'] ?? '';
 $best     = isset($_GET['best']) ? '1' : '';
+$sort_by  = $_GET['sort_by'] ?? '';
 $perPage  = $_GET['per_page'] ?? 10;
 $page     = max(1, (int)($_GET['page'] ?? 1));
 
@@ -34,12 +38,12 @@ if ($page > $totalPages) {
 
 // Ambil data produk untuk halaman saat ini
 $limit = ($perPage === 'all') ? $totalFiltered : (int)$perPage;
-$parfums = $parfumManager->readPaginated($page, $limit, $q, $kategori, $gender, '', $best);
+$parfums = $parfumManager->readPaginated($page, $limit, $q, $kategori, $gender, '', $best, $sort_by);
 
 // Bangun query string untuk link pagination agar filter tidak hilang
 $baseParams = http_build_query(array_filter([
     'q' => $q, 'kategori' => $kategori, 'gender' => $gender, 
-    'best' => $best, 'per_page' => $perPage
+    'best' => $best, 'sort_by' => $sort_by, 'per_page' => $perPage
 ]));
 
 ?>
@@ -122,9 +126,8 @@ $baseParams = http_build_query(array_filter([
                                 <label for="kategori" class="form-label fw-semibold text-muted small text-uppercase">Kategori</label>
                                 <select name="kategori" id="kategori" class="form-select bg-light">
                                     <option value="">Semua</option>
-                                    <?php $kategoriOptions = ['Floral','Fresh','Oriental','Woody','Citrus','Gourmand']; ?>
-                                    <?php foreach ($kategoriOptions as $opt): ?>
-                                        <option value="<?php echo $opt; ?>" <?php echo ($kategori === $opt) ? 'selected' : ''; ?>><?php echo $opt; ?></option>
+                                    <?php foreach ($availableCategories as $cat): ?>
+                                        <option value="<?php echo htmlspecialchars($cat); ?>" <?php echo ($kategori === $cat) ? 'selected' : ''; ?>><?php echo htmlspecialchars($cat); ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -135,6 +138,14 @@ $baseParams = http_build_query(array_filter([
                                     <option value="Male" <?php echo ($gender === 'Male') ? 'selected' : ''; ?>>Male</option>
                                     <option value="Female" <?php echo ($gender === 'Female') ? 'selected' : ''; ?>>Female</option>
                                     <option value="Unisex" <?php echo ($gender === 'Unisex') ? 'selected' : ''; ?>>Unisex</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="sort_by" class="form-label fw-semibold text-muted small text-uppercase">Urutkan Harga</label>
+                                <select name="sort_by" id="sort_by" class="form-select bg-light">
+                                    <option value="">Terbaru</option>
+                                    <option value="price_asc" <?php echo ($sort_by === 'price_asc') ? 'selected' : ''; ?>>Murah ke Mahal</option>
+                                    <option value="price_desc" <?php echo ($sort_by === 'price_desc') ? 'selected' : ''; ?>>Mahal ke Murah</option>
                                 </select>
                             </div>
                             <div class="col-md-2 d-flex align-items-center mb-2">
@@ -218,20 +229,33 @@ $baseParams = http_build_query(array_filter([
                                             <span class="badge <?php echo $badgeClass; ?> bg-opacity-75 rounded-pill px-2"><?php echo htmlspecialchars($g); ?></span>
                                         </td>
                                         <td>
-                                            <form action="process_product.php" method="POST" class="d-flex align-items-center gap-2">
+                                            <form action="process_product.php" method="POST" class="quick-update-form d-flex align-items-center gap-2">
                                                 <input type="hidden" name="action" value="quick_update">
                                                 <input type="hidden" name="id" value="<?php echo $parfum->getId(); ?>">
-                                                <div class="d-flex flex-column gap-1">
-                                                    <div class="input-group input-group-sm" style="width: 140px;">
-                                                        <span class="input-group-text bg-light border-end-0 text-muted">Rp</span>
-                                                        <input type="number" name="harga" class="form-control border-start-0" value="<?php echo (int)$parfum->getHarga(); ?>">
+                                                <input type="hidden" name="harga" class="harga-value" value="<?php echo (int)$parfum->getHarga(); ?>">
+                                                <input type="hidden" name="stok" class="stok-value" value="<?php echo (int)$parfum->getStok(); ?>">
+                                                
+                                                <div class="d-flex flex-column gap-2">
+                                                    <!-- Harga Display -->
+                                                    <div class="price-display-wrapper">
+                                                        <div class="price-display px-2 py-1 bg-light rounded border" style="min-width: 120px; cursor: pointer;" title="Klik untuk edit">
+                                                            <small class="text-muted d-block" style="font-size: 0.7rem;">Harga</small>
+                                                            <div class="fw-medium">Rp <?php echo number_format($parfum->getHarga(), 0, ',', '.'); ?></div>
+                                                        </div>
+                                                        <input type="number" class="price-edit form-control form-control-sm d-none" placeholder="Harga">
                                                     </div>
-                                                    <div class="input-group input-group-sm" style="width: 140px;">
-                                                        <input type="number" name="stok" class="form-control border-end-0" value="<?php echo (int)$parfum->getStok(); ?>">
-                                                        <span class="input-group-text bg-light border-start-0 text-muted">pcs</span>
+                                                    
+                                                    <!-- Stok Display -->
+                                                    <div class="stock-display-wrapper">
+                                                        <div class="stock-display px-2 py-1 bg-light rounded border" style="min-width: 120px; cursor: pointer;" title="Klik untuk edit">
+                                                            <small class="text-muted d-block" style="font-size: 0.7rem;">Stok</small>
+                                                            <div class="fw-medium"><?php echo number_format($parfum->getStok(), 0, ',', '.'); ?> pcs</div>
+                                                        </div>
+                                                        <input type="number" class="stock-edit form-control form-control-sm d-none" placeholder="Stok">
                                                     </div>
                                                 </div>
-                                                <button type="submit" class="btn btn-sm btn-light text-success border hover-shadow h-100" title="Simpan Perubahan">
+                                                
+                                                <button type="submit" class="btn btn-sm btn-success border shadow-sm submit-update d-none" title="Simpan Perubahan">
                                                     <i class="bi bi-check-lg"></i>
                                                 </button>
                                             </form>
@@ -241,9 +265,9 @@ $baseParams = http_build_query(array_filter([
                                                 <a href="product_form.php?id=<?php echo $parfum->getId(); ?>" class="btn btn-sm btn-light text-primary border hover-shadow" title="Edit">
                                                     <i class="bi bi-pencil-square"></i>
                                                 </a>
-                                                <a href="process_product.php?action=delete&id=<?php echo $parfum->getId(); ?>" class="btn btn-sm btn-light text-danger border hover-shadow" title="Hapus" onclick="return confirm('Anda yakin ingin menghapus produk ini?');">
+                                                <button type="button" class="btn btn-sm btn-light text-danger border hover-shadow" title="Hapus" data-bs-toggle="modal" data-bs-target="#deleteModal" data-delete-id="<?php echo $parfum->getId(); ?>" data-delete-name="<?php echo htmlspecialchars($parfum->getNama()); ?>">
                                                     <i class="bi bi-trash"></i>
-                                                </a>
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
@@ -278,8 +302,116 @@ $baseParams = http_build_query(array_filter([
     </div>
 </div>
 
+<!-- Modal Konfirmasi Hapus -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header border-bottom-0 pb-0">
+                <h5 class="modal-title fw-bold" id="deleteModalLabel">
+                    <i class="bi bi-exclamation-triangle text-danger me-2"></i>Konfirmasi Hapus Produk
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-3">
+                <p class="mb-2">Apakah Anda yakin ingin menghapus produk:</p>
+                <p class="fw-bold text-dark mb-2" id="deleteProductName"></p>
+                <p class="text-muted small mb-0">Tindakan ini tidak dapat dibatalkan.</p>
+            </div>
+            <div class="modal-footer border-top-0 pt-0">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
+                <a href="#" id="confirmDeleteBtn" class="btn btn-danger">
+                    <i class="bi bi-trash me-1"></i> Ya, Hapus
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <?php include 'includes/footer.php'; ?>
 <script src="../sidebar.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Click-to-edit functionality for price and stock
+    document.querySelectorAll('.quick-update-form').forEach(function(form) {
+        const priceDisplay = form.querySelector('.price-display');
+        const priceEdit = form.querySelector('.price-edit');
+        const priceValue = form.querySelector('.harga-value');
+        
+        const stockDisplay = form.querySelector('.stock-display');
+        const stockEdit = form.querySelector('.stock-edit');
+        const stockValue = form.querySelector('.stok-value');
+        
+        const submitBtn = form.querySelector('.submit-update');
+        
+        // Price click to edit
+        if (priceDisplay && priceEdit) {
+            priceDisplay.addEventListener('click', function() {
+                priceEdit.value = priceValue.value;
+                priceDisplay.classList.add('d-none');
+                priceEdit.classList.remove('d-none');
+                priceEdit.focus();
+                submitBtn.classList.remove('d-none');
+            });
+            
+            priceEdit.addEventListener('blur', function() {
+                setTimeout(function() {
+                    const newValue = parseInt(priceEdit.value) || 0;
+                    priceValue.value = newValue;
+                    priceDisplay.querySelector('.fw-medium').textContent = 'Rp ' + newValue.toLocaleString('id-ID');
+                    priceEdit.classList.add('d-none');
+                    priceDisplay.classList.remove('d-none');
+                }, 200);
+            });
+        }
+        
+        // Stock click to edit
+        if (stockDisplay && stockEdit) {
+            stockDisplay.addEventListener('click', function() {
+                stockEdit.value = stockValue.value;
+                stockDisplay.classList.add('d-none');
+                stockEdit.classList.remove('d-none');
+                stockEdit.focus();
+                submitBtn.classList.remove('d-none');
+            });
+            
+            stockEdit.addEventListener('blur', function() {
+                setTimeout(function() {
+                    const newValue = parseInt(stockEdit.value) || 0;
+                    stockValue.value = newValue;
+                    stockDisplay.querySelector('.fw-medium').textContent = newValue.toLocaleString('id-ID') + ' pcs';
+                    stockEdit.classList.add('d-none');
+                    stockDisplay.classList.remove('d-none');
+                }, 200);
+            });
+        }
+        
+        // Hide submit button if both are back to display mode
+        form.addEventListener('click', function(e) {
+            if (!priceEdit.classList.contains('d-none') || !stockEdit.classList.contains('d-none')) {
+                return;
+            }
+            if (e.target !== submitBtn && !submitBtn.contains(e.target)) {
+                submitBtn.classList.add('d-none');
+            }
+        });
+    });
+    
+    
+    // Delete confirmation modal
+    const deleteModal = document.getElementById('deleteModal');
+    if (deleteModal) {
+        deleteModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const deleteId = button.getAttribute('data-delete-id');
+            const deleteName = button.getAttribute('data-delete-name');
+            
+            document.getElementById('deleteProductName').textContent = deleteName;
+            document.getElementById('confirmDeleteBtn').href = `process_product.php?action=delete&id=${deleteId}`;
+        });
+    }
+});
+</script>
 </body>
 </html>
+
