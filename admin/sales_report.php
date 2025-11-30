@@ -7,14 +7,23 @@ $orderManager = new OrderManager();
 $startDate = isset($_GET['start_date']) && $_GET['start_date'] !== '' ? $_GET['start_date'] : null;
 $endDate   = isset($_GET['end_date']) && $_GET['end_date'] !== '' ? $_GET['end_date'] : null;
 // Pagination untuk Recent Orders
-$ordersPerPage = 10;
+$ordersPerPage = isset($_GET['orders_per_page']) ? intval($_GET['orders_per_page']) : 10;
 $ordersPage = isset($_GET['orders_page']) ? max(1, intval($_GET['orders_page'])) : 1;
+// Filter status untuk Recent Orders
+$orderStatus = $_GET['order_status'] ?? '';
 // Pagination untuk Top Selling Products
-$productsPerPage = 5;
+$productsPerPage = isset($_GET['products_per_page']) ? intval($_GET['products_per_page']) : 5;
 $productsPage = isset($_GET['products_page']) ? max(1, intval($_GET['products_page'])) : 1;
 // Ambil statistik & daftar pesanan dengan filter tanggal (jika ada)
 $stats = $orderManager->getSalesStatistics($startDate, $endDate);
 $allOrdersFull = $orderManager->getAllOrdersWithUserDetails($startDate, $endDate);
+// Filter berdasarkan status jika dipilih
+if ($orderStatus !== '') {
+    $allOrdersFull = array_filter($allOrdersFull, function($order) use ($orderStatus) {
+        return $order['status'] === $orderStatus;
+    });
+    $allOrdersFull = array_values($allOrdersFull); // Re-index array
+}
 // Hitung total orders dan pagination
 $totalOrders = count($allOrdersFull);
 $totalOrdersPages = ceil($totalOrders / $ordersPerPage);
@@ -165,7 +174,18 @@ $errorMsg = $_GET['error'] ?? '';
                 <div class="col-lg-5">
                     <div class="card table-card h-100 border-0 shadow-sm">
                         <div class="card-header bg-white py-3">
-                            <h5 class="card-title mb-0 fw-bold">Produk Terlaris</h5>
+                            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                <h5 class="mb-0 fw-bold">Produk Terlaris</h5>
+                                <div class="d-flex align-items-center gap-2">
+                                    <label for="productsPerPageSelect" class="text-muted small mb-0">Show:</label>
+                                    <select id="productsPerPageSelect" class="form-select form-select-sm" style="width: auto;" onchange="changeProductsPerPage(this.value)">
+                                        <option value="5" <?php echo ($productsPerPage == 5) ? 'selected' : ''; ?>>5</option>
+                                        <option value="10" <?php echo ($productsPerPage == 10) ? 'selected' : ''; ?>>10</option>
+                                        <option value="20" <?php echo ($productsPerPage == 20) ? 'selected' : ''; ?>>20</option>
+                                        <option value="50" <?php echo ($productsPerPage == 50) ? 'selected' : ''; ?>>50</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-body p-0">
                             <?php if (empty($topProducts)): ?>
@@ -249,8 +269,27 @@ $errorMsg = $_GET['error'] ?? '';
                 <!-- Orders Table -->
                 <div class="col-lg-7">
                     <div class="card table-card h-100 border-0 shadow-sm">
-                        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                            <h5 class="card-title mb-0 fw-bold">Pesanan Terbaru</h5>
+                        <div class="card-header bg-white py-3">
+                            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                <h5 class="mb-0 fw-bold">Pesanan Terbaru</h5>
+                                <div class="d-flex align-items-center gap-2">
+                                    <label for="orderStatusFilter" class="text-muted small mb-0">Status:</label>
+                                    <select id="orderStatusFilter" class="form-select form-select-sm" style="width: auto;" onchange="changeOrderStatus(this.value)">
+                                        <option value="" <?php echo ($orderStatus === '') ? 'selected' : ''; ?>>Semua</option>
+                                        <option value="Pending" <?php echo ($orderStatus === 'Pending') ? 'selected' : ''; ?>>Pending</option>
+                                        <option value="Menunggu Konfirmasi" <?php echo ($orderStatus === 'Menunggu Konfirmasi') ? 'selected' : ''; ?>>Menunggu Konfirmasi</option>
+                                        <option value="Selesai" <?php echo ($orderStatus === 'Selesai') ? 'selected' : ''; ?>>Selesai</option>
+                                        <option value="Dibatalkan" <?php echo ($orderStatus === 'Dibatalkan') ? 'selected' : ''; ?>>Dibatalkan</option>
+                                    </select>
+                                    <label for="ordersPerPageSelect" class="text-muted small mb-0 ms-2">Show:</label>
+                                    <select id="ordersPerPageSelect" class="form-select form-select-sm" style="width: auto;" onchange="changeOrdersPerPage(this.value)">
+                                        <option value="5" <?php echo ($ordersPerPage == 5) ? 'selected' : ''; ?>>5</option>
+                                        <option value="10" <?php echo ($ordersPerPage == 10) ? 'selected' : ''; ?>>10</option>
+                                        <option value="20" <?php echo ($ordersPerPage == 20) ? 'selected' : ''; ?>>20</option>
+                                        <option value="50" <?php echo ($ordersPerPage == 50) ? 'selected' : ''; ?>>50</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-body p-0">
                             <div class="table-responsive">
@@ -381,7 +420,34 @@ $errorMsg = $_GET['error'] ?? '';
 <?php include 'includes/footer.php'; ?>
 <script src="../js/bootstrap.bundle.min.js"></script>
 <script src="../sidebar.js"></script>
-<script src="../js/sales_report.js"></script>
+<script src="js/sales_report.js"></script>
+<script>
+// Per-page selector functions
+window.changeProductsPerPage = function(perPage) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('products_per_page', perPage);
+    url.searchParams.set('products_page', '1'); // Reset to page 1
+    window.location.href = url.toString();
+};
+
+window.changeOrdersPerPage = function(perPage) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('orders_per_page', perPage);
+    url.searchParams.set('orders_page', '1'); // Reset to page 1
+    window.location.href = url.toString();
+};
+
+window.changeOrderStatus = function(status) {
+    const url = new URL(window.location.href);
+    if (status) {
+        url.searchParams.set('order_status', status);
+    } else {
+        url.searchParams.delete('order_status');
+    }
+    url.searchParams.set('orders_page', '1'); // Reset to page 1
+    window.location.href = url.toString();
+};
+</script>
 <?php include 'includes/payment_modals.php'; ?>
 </body>
 </html>

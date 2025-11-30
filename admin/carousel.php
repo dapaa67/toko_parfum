@@ -77,7 +77,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])
     }
 }
 
-$itemsPerPage = 5;
+$itemsPerPage = isset($_GET['per_page']) ? intval($_GET['per_page']) : 5;
 $currentPage = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 
 $allCarouselItems = $carouselManager->readAll();
@@ -220,7 +220,22 @@ $carouselItems = array_slice($allCarouselItems, $offset, $itemsPerPage);
 
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-white py-3">
-                    <h5 class="card-title mb-0 fw-bold">Daftar Item Carousel</h5>
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <h5 class="mb-0 fw-bold">Daftar Item Carousel</h5>
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <label for="perPageSelect" class="text-muted small mb-0">Show:</label>
+                                <select id="perPageSelect" class="form-select form-select-sm" style="width: auto;" onchange="changePerPage(this.value)">
+                                    <option value="5" <?php echo ($itemsPerPage == 5) ? 'selected' : ''; ?>>5</option>
+                                    <option value="10" <?php echo ($itemsPerPage == 10) ? 'selected' : ''; ?>>10</option>
+                                    <option value="20" <?php echo ($itemsPerPage == 20) ? 'selected' : ''; ?>>20</option>
+                                    <option value="50" <?php echo ($itemsPerPage == 50) ? 'selected' : ''; ?>>50</option>
+                                </select>
+                                <span class="text-muted small">entries</span>
+                            </div>
+                            <span class="badge bg-light text-dark border"><?php echo $totalItems; ?> Items</span>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
@@ -278,7 +293,7 @@ $carouselItems = array_slice($allCarouselItems, $offset, $itemsPerPage);
                                 <ul class="pagination pagination-sm justify-content-center mb-0">
                                     <?php if ($currentPage > 1): ?>
                                         <li class="page-item">
-                                            <a class="page-link" href="?page=<?php echo $currentPage - 1; ?>">
+                                            <a class="page-link" href="?page=<?php echo $currentPage - 1; ?>&per_page=<?php echo $itemsPerPage; ?>">
                                                 <i class="bi bi-chevron-left"></i>
                                             </a>
                                         </li>
@@ -289,14 +304,14 @@ $carouselItems = array_slice($allCarouselItems, $offset, $itemsPerPage);
                                     <?php endif; ?>
                                     
                                     <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                                        <li class="page-item <?php echo $i === $currentPage ? 'active' : ''; ?>">
-                                            <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                    <li class="page-item <?php echo $i === $currentPage ? 'active' : ''; ?>">
+                                            <a class="page-link" href="?page=<?php echo $i; ?>&per_page=<?php echo $itemsPerPage; ?>"><?php echo $i; ?></a>
                                         </li>
                                     <?php endfor; ?>
                                     
                                     <?php if ($currentPage < $totalPages): ?>
                                         <li class="page-item">
-                                            <a class="page-link" href="?page=<?php echo $currentPage + 1; ?>">
+                                            <a class="page-link" href="?page=<?php echo $currentPage + 1; ?>&per_page=<?php echo $itemsPerPage; ?>">
                                                 <i class="bi bi-chevron-right"></i>
                                             </a>
                                         </li>
@@ -367,6 +382,14 @@ document.addEventListener('DOMContentLoaded', function () {
       confirmBtn.href = `carousel.php?action=delete&id=${deleteId}&page=${deletePage}`;
     });
   }
+  
+  // Per-page selector function
+  window.changePerPage = function(perPage) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('per_page', perPage);
+    url.searchParams.set('page', '1'); // Reset to page 1 when changing per_page
+    window.location.href = url.toString();
+  };
 });
 </script>
 </body>

@@ -54,13 +54,13 @@ if (!$imgSrc || !file_exists($imgSrc)) {
                         <form action="cart_action.php" method="POST">
                             <input type="hidden" name="action" value="add">
                             <input type="hidden" name="product_id" value="<?php echo $parfum->getId(); ?>">
-                            <div class="row align-items-center">
+                            <div class="row align-items-end">
                                 <div class="col-md-4 mb-3 mb-md-0">
                                     <label for="quantity" class="form-label">Jumlah:</label>
                                     <input type="number" name="quantity" id="quantity" class="form-control" value="1" min="1" max="<?php echo $parfum->getStok(); ?>">
                                 </div>
-                                <div class="col-md-8">
-                                    <button type="submit" class="btn btn-primary btn-lg w-100"><i class="bi bi-cart-plus-fill"></i> Tambah ke Keranjang</button>
+                                <div class="col-md-8 mb-3 mb-md-0">
+                                    <button type="submit" class="btn btn-primary w-100"><i class="bi bi-cart-plus-fill"></i> Tambah ke Keranjang</button>
                                 </div>
                             </div>
                         </form>

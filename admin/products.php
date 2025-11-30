@@ -168,9 +168,22 @@ $baseParams = http_build_query(array_filter([
             <!-- Products Table -->
             <div class="card table-card border-0 shadow-sm">
                 <div class="card-header bg-white py-3">
-                    <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                         <h5 class="mb-0 fw-bold">Daftar Produk</h5>
-                        <span class="badge bg-light text-dark border"><?php echo $totalFiltered; ?> Items</span>
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <label for="perPageSelect" class="text-muted small mb-0">Show:</label>
+                                <select id="perPageSelect" class="form-select form-select-sm" style="width: auto;" onchange="changePerPage(this.value)">
+                                    <option value="5" <?php echo ($perPage == 5) ? 'selected' : ''; ?>>5</option>
+                                    <option value="10" <?php echo ($perPage == 10) ? 'selected' : ''; ?>>10</option>
+                                    <option value="20" <?php echo ($perPage == 20) ? 'selected' : ''; ?>>20</option>
+                                    <option value="50" <?php echo ($perPage == 50) ? 'selected' : ''; ?>>50</option>
+                                    <option value="100" <?php echo ($perPage == 100) ? 'selected' : ''; ?>>100</option>
+                                </select>
+                                <span class="text-muted small">entries</span>
+                            </div>
+                            <span class="badge bg-light text-dark border"><?php echo $totalFiltered; ?> Items</span>
+                        </div>
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -410,6 +423,14 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('confirmDeleteBtn').href = `process_product.php?action=delete&id=${deleteId}`;
         });
     }
+    
+    // Per-page selector function
+    window.changePerPage = function(perPage) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('per_page', perPage);
+        url.searchParams.set('page', '1'); // Reset to page 1 when changing per_page
+        window.location.href = url.toString();
+    };
 });
 </script>
 </body>

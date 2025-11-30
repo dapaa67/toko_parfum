@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_id'], $_POST['ac
 }
 
 // Pagination
-$usersPerPage = 15;
+$usersPerPage = isset($_GET['per_page']) ? intval($_GET['per_page']) : 15;
 $currentPage = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 
 $allUsers = $userManager->getAllUsers();
@@ -100,6 +100,26 @@ $pageTitle = "Manajemen User";
             </div>
 
             <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <h5 class="mb-0 fw-bold">Daftar User</h5>
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <label for="perPageSelect" class="text-muted small mb-0">Show:</label>
+                                <select id="perPageSelect" class="form-select form-select-sm" style="width: auto;" onchange="changePerPage(this.value)">
+                                    <option value="5" <?php echo ($usersPerPage == 5) ? 'selected' : ''; ?>>5</option>
+                                    <option value="10" <?php echo ($usersPerPage == 10) ? 'selected' : ''; ?>>10</option>
+                                    <option value="15" <?php echo ($usersPerPage == 15) ? 'selected' : ''; ?>>15</option>
+                                    <option value="20" <?php echo ($usersPerPage == 20) ? 'selected' : ''; ?>>20</option>
+                                    <option value="50" <?php echo ($usersPerPage == 50) ? 'selected' : ''; ?>>50</option>
+                                    <option value="100" <?php echo ($usersPerPage == 100) ? 'selected' : ''; ?>>100</option>
+                                </select>
+                                <span class="text-muted small">entries</span>
+                            </div>
+                            <span class="badge bg-light text-dark border"><?php echo $totalUsers; ?> Users</span>
+                        </div>
+                    </div>
+                </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
@@ -159,6 +179,27 @@ $pageTitle = "Manajemen User";
                         </table>
                     </div>
                 </div>
+                
+                <!-- Pagination -->
+                <?php if ($totalPages > 1): ?>
+                <div class="card-footer bg-white border-top-0 py-3">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center mb-0">
+                            <li class="page-item <?php echo ($currentPage <= 1) ? 'disabled' : ''; ?>">
+                                <a class="page-link border-0" href="?page=<?php echo $currentPage - 1; ?>&per_page=<?php echo $usersPerPage; ?>"><i class="bi bi-chevron-left"></i></a>
+                            </li>
+                            <?php for($i = 1; $i <= $totalPages; $i++): ?>
+                                <li class="page-item <?php echo ($currentPage == $i) ? 'active' : ''; ?>">
+                                    <a class="page-link border-0 rounded-circle mx-1 <?php echo ($currentPage == $i) ? 'bg-primary text-white shadow-sm' : 'text-muted'; ?>" href="?page=<?php echo $i; ?>&per_page=<?php echo $usersPerPage; ?>"><?php echo $i; ?></a>
+                                </li>
+                            <?php endfor; ?>
+                            <li class="page-item <?php echo ($currentPage >= $totalPages) ? 'disabled' : ''; ?>">
+                                <a class="page-link border-0" href="?page=<?php echo $currentPage + 1; ?>&per_page=<?php echo $usersPerPage; ?>"><i class="bi bi-chevron-right"></i></a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <?php endif; ?>
             </div>
 
         </main>
@@ -363,6 +404,14 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('unbanUserId').value = userId;
         document.getElementById('unbanUsername').textContent = username;
     });
+    
+    // Per-page selector function
+    window.changePerPage = function(perPage) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('per_page', perPage);
+        url.searchParams.set('page', '1'); // Reset to page 1 when changing per_page
+        window.location.href = url.toString();
+    };
 });
 </script>
 
