@@ -45,15 +45,7 @@
             </div>
         </div>
 
-        <hr class="my-4">
 
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <p class="mb-0" style="font-size: 0.85rem;">
-                    &copy; Muhammad Daffa | 221011400800 | 07TPLP020
-                </p>
-            </div>
-        </div>
     </div>
 </footer>
 <script src="js/bootstrap.bundle.min.js"></script>
