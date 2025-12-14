@@ -1,23 +1,28 @@
 /* Admin Dashboard Variables */
 :root {
-    --admin-primary: #d4af37;
-    /* Gold yang lebih elegan */
-    --admin-primary-hover: #c5a028;
-    --admin-dark: #121212;
-    --admin-light: #f8f9fa;
-    --admin-sidebar-bg: #1e1e1e;
-    --admin-sidebar-text: #e0e0e0;
-    --admin-sidebar-hover: rgba(212, 175, 55, 0.1);
+    --admin-primary: #D8C7A1;
+    /* Soft Sand Gold */
+    --admin-primary-hover: #C5B490;
+    /* Darker Sand Gold */
+    --admin-dark: #2D2A26;
+    /* Soft Black */
+    --admin-light: #FBF9F4;
+    /* Warm White */
+    --admin-sidebar-bg: #2D2A26;
+    /* Soft Black */
+    --admin-sidebar-text: #EFE8D9;
+    /* Light Beige Cream */
+    --admin-sidebar-hover: rgba(216, 199, 161, 0.1);
     --admin-card-bg: #ffffff;
-    --admin-card-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    --admin-card-shadow: 0 10px 30px rgba(45, 42, 38, 0.05);
     --admin-border-radius: 16px;
-    --admin-font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    --admin-font-family: 'DM Sans', 'Inter', sans-serif;
 }
 
 body {
-    background-color: #f0f2f5;
+    background-color: #FBF9F4;
     font-family: var(--admin-font-family);
-    color: #333;
+    color: #2D2A26;
 }
 
 /* Sidebar Styles */
@@ -53,7 +58,7 @@ body {
 .admin-sidebar .nav-link.active {
     background-color: var(--admin-primary);
     color: #fff;
-    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+    box-shadow: 0 4px 15px rgba(216, 199, 161, 0.4);
 }
 
 .admin-sidebar .nav-link i {
@@ -111,7 +116,7 @@ body {
 }
 
 .bg-primary-soft {
-    background-color: rgba(212, 175, 55, 0.1);
+    background-color: rgba(216, 199, 161, 0.1);
     color: var(--admin-primary);
 }
 
@@ -168,7 +173,7 @@ body {
 
 /* Buttons */
 .btn-primary {
-    background: linear-gradient(135deg, var(--admin-primary), #b8962e);
+    background: linear-gradient(135deg, var(--admin-primary), #C5B490);
     border: none;
     color: #fff;
     font-weight: 600;
@@ -178,9 +183,9 @@ body {
 }
 
 .btn-primary:hover {
-    background: linear-gradient(135deg, #c5a028, #a68525);
+    background: linear-gradient(135deg, #C5B490, #B09D70);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+    box-shadow: 0 4px 12px rgba(216, 199, 161, 0.3);
     color: #fff;
 }
 

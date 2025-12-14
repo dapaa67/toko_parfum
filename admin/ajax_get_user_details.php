@@ -8,7 +8,7 @@ require_once '../models/OrderManager.php';
 $userId = $_GET['user_id'] ?? 0;
 
 if (!$userId) {
-    echo '<div class="alert alert-danger">ID User tidak valid.</div>';
+    echo '<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">ID User tidak valid.</div>';
     exit;
 }
 
@@ -19,43 +19,43 @@ $user = $userManager->getUserById($userId);
 $orders = $orderManager->getOrdersByUserId($userId);
 
 if (!$user) {
-    echo '<div class="alert alert-danger">User tidak ditemukan.</div>';
+    echo '<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">User tidak ditemukan.</div>';
     exit;
 }
 ?>
 
-<div class="row mb-4">
-    <div class="col-md-12">
-        <h6 class="fw-bold text-uppercase text-muted small mb-3">Informasi Pengguna</h6>
-        <table class="table table-borderless table-sm">
+<div class="mb-6">
+    <h6 class="font-bold text-xs uppercase text-gray-500 mb-3">Informasi Pengguna</h6>
+    <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+        <table class="w-full text-sm">
             <tr>
-                <td style="width: 150px;" class="text-muted">Username</td>
-                <td class="fw-medium">: <?php echo htmlspecialchars($user['username']); ?></td>
+                <td class="w-32 text-gray-500 py-1">Username</td>
+                <td class="font-medium text-gray-900">: <?php echo htmlspecialchars($user['username']); ?></td>
             </tr>
             <tr>
-                <td class="text-muted">Nama Lengkap</td>
-                <td class="fw-medium">: <?php echo htmlspecialchars($user['full_name'] ?? '-'); ?></td>
+                <td class="text-gray-500 py-1">Nama Lengkap</td>
+                <td class="font-medium text-gray-900">: <?php echo htmlspecialchars($user['full_name'] ?? '-'); ?></td>
             </tr>
             <tr>
-                <td class="text-muted">Email</td>
-                <td class="fw-medium">: <?php echo htmlspecialchars($user['email'] ?? '-'); ?></td>
+                <td class="text-gray-500 py-1">Email</td>
+                <td class="font-medium text-gray-900">: <?php echo htmlspecialchars($user['email'] ?? '-'); ?></td>
             </tr>
             <tr>
-                <td class="text-muted">No. Telepon</td>
-                <td class="fw-medium">: <?php echo htmlspecialchars($user['phone'] ?? '-'); ?></td>
+                <td class="text-gray-500 py-1">No. Telepon</td>
+                <td class="font-medium text-gray-900">: <?php echo htmlspecialchars($user['phone'] ?? '-'); ?></td>
             </tr>
             <tr>
-                <td class="text-muted">Alamat</td>
-                <td class="fw-medium">: <?php echo htmlspecialchars($user['address'] ?? '-'); ?></td>
+                <td class="text-gray-500 py-1">Alamat</td>
+                <td class="font-medium text-gray-900">: <?php echo htmlspecialchars($user['address'] ?? '-'); ?></td>
             </tr>
             <tr>
-                <td class="text-muted">Status</td>
-                <td>
+                <td class="text-gray-500 py-1">Status</td>
+                <td class="py-1">
                     : 
                     <?php if (isset($user['is_active']) && $user['is_active'] == 0): ?>
-                        <span class="badge bg-danger">Banned</span>
+                        <span class="px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">Banned</span>
                     <?php else: ?>
-                        <span class="badge bg-success">Active</span>
+                        <span class="px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Active</span>
                     <?php endif; ?>
                 </td>
             </tr>
@@ -63,22 +63,22 @@ if (!$user) {
     </div>
 </div>
 
-<h6 class="fw-bold text-uppercase text-muted small mb-3">Riwayat Pesanan</h6>
-<div class="table-responsive">
-    <table class="table table-hover table-sm align-middle">
-        <thead class="table-light">
+<h6 class="font-bold text-xs uppercase text-gray-500 mb-3">Riwayat Pesanan</h6>
+<div class="overflow-x-auto border border-gray-200 rounded-lg">
+    <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
             <tr>
-                <th>ID Pesanan</th>
-                <th>Tanggal</th>
-                <th>Total</th>
-                <th>Status</th>
-                <th class="text-end">Aksi</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID Pesanan</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="bg-white divide-y divide-gray-200">
             <?php if (empty($orders)): ?>
                 <tr>
-                    <td colspan="5" class="text-center text-muted py-3">Belum ada riwayat pesanan.</td>
+                    <td colspan="5" class="px-4 py-4 text-center text-gray-500 text-sm">Belum ada riwayat pesanan.</td>
                 </tr>
             <?php else: ?>
                 <?php foreach ($orders as $order): ?>
@@ -87,19 +87,25 @@ if (!$user) {
                             ? $order['nomor_pesanan']
                             : '#' . $order['id'];
                             
-                        $statusClass = 'bg-secondary';
-                        if ($order['status'] === 'Pending') $statusClass = 'bg-warning text-dark';
-                        elseif ($order['status'] === 'Selesai') $statusClass = 'bg-success';
-                        elseif ($order['status'] === 'Dibatalkan') $statusClass = 'bg-danger';
-                        elseif ($order['status'] === 'Menunggu Konfirmasi') $statusClass = 'bg-info text-dark';
+                        $statusClass = 'bg-gray-100 text-gray-800';
+                        if ($order['status'] === 'Pending') $statusClass = 'bg-yellow-100 text-yellow-800';
+                        elseif ($order['status'] === 'Selesai') $statusClass = 'bg-green-100 text-green-800';
+                        elseif ($order['status'] === 'Dibatalkan') $statusClass = 'bg-red-100 text-red-800';
+                        elseif ($order['status'] === 'Menunggu Konfirmasi') $statusClass = 'bg-blue-100 text-blue-800';
                     ?>
-                    <tr>
-                        <td><span class="font-monospace small"><?php echo htmlspecialchars($displayNo); ?></span></td>
-                        <td><?php echo date('d M Y', strtotime($order['tanggal_pesanan'])); ?></td>
-                        <td>Rp <?php echo number_format($order['total_harga'], 0, ',', '.'); ?></td>
-                        <td><span class="badge <?php echo $statusClass; ?> rounded-pill"><?php echo htmlspecialchars($order['status']); ?></span></td>
-                        <td class="text-end">
-                            <button class="btn btn-xs btn-outline-primary view-details-btn" data-order-id="<?php echo $order['id']; ?>" data-user-id="<?php echo $userId; ?>" data-bs-toggle="modal" data-bs-target="#orderDetailsModal">
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-4 py-2 whitespace-nowrap text-sm font-mono text-gray-600"><?php echo htmlspecialchars($displayNo); ?></td>
+                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900"><?php echo date('d M Y', strtotime($order['tanggal_pesanan'])); ?></td>
+                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900">Rp <?php echo number_format($order['total_harga'], 0, ',', '.'); ?></td>
+                        <td class="px-4 py-2 whitespace-nowrap">
+                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full <?php echo $statusClass; ?>">
+                                <?php echo htmlspecialchars($order['status']); ?>
+                            </span>
+                        </td>
+                        <td class="px-4 py-2 whitespace-nowrap text-right text-sm font-medium">
+                            <button type="button" 
+                                    onclick="showOrderDetailsModal(<?php echo $order['id']; ?>)"
+                                    class="text-blue-600 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 px-2 py-1 rounded transition">
                                 <i class="bi bi-eye"></i>
                             </button>
                         </td>

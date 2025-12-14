@@ -68,13 +68,16 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])
             unlink('../' . $item->image_path);
         }
         if ($carouselManager->delete($idToDelete)) {
-            $message = "Item carousel berhasil dihapus!";
-            $message_type = 'success';
+            $_SESSION['message'] = "Item carousel berhasil dihapus!";
+            $_SESSION['message_type'] = 'success';
         } else {
-            $message = "Gagal menghapus item carousel.";
-            $message_type = 'danger';
+            $_SESSION['message'] = "Gagal menghapus item carousel.";
+            $_SESSION['message_type'] = 'danger';
         }
     }
+    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+    header('Location: carousel.php?page=' . $page);
+    exit();
 }
 
 $itemsPerPage = isset($_GET['per_page']) ? intval($_GET['per_page']) : 5;
@@ -85,312 +88,388 @@ $totalItems = count($allCarouselItems);
 $totalPages = ceil($totalItems / $itemsPerPage);
 $offset = ($currentPage - 1) * $itemsPerPage;
 $carouselItems = array_slice($allCarouselItems, $offset, $itemsPerPage);
+
+// Read message from session if exists
+if (isset($_SESSION['message'])) {
+    $message = $_SESSION['message'];
+    $message_type = $_SESSION['message_type'] ?? 'info';
+    unset($_SESSION['message']);
+    unset($_SESSION['message_type']);
+}
+
+$pageTitle = "Kelola Carousel";
+
+$editItem = null;
+if (isset($_GET['action']) && $_GET['action'] === 'edit' && isset($_GET['id'])) {
+    $editItem = $carouselManager->readById($_GET['id']);
+}
+
+require_once 'includes/header.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kelola Carousel - Admin</title>
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
-    <link href="../css/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="admin.css">
-</head>
-<body>
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
-    <div class="container-fluid">
-        <a class="navbar-brand d-flex align-items-center" href="dashboard.php">
-            <i class="bi bi-flower2 me-2 text-warning"></i>
-            <span class="fw-bold">ParfumMy Admin</span>
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarContent">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-person-circle me-1"></i> Admin
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="../index.php" target="_blank"><i class="bi bi-box-arrow-up-right me-2"></i>Lihat Situs</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-danger" href="../logout.php"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
-                    </ul>
-                </li>
-            </ul>
+<main class="flex-1 px-2 pb-2" x-data="{ showDeleteModal: false, deleteId: null, deleteTitle: '' }">
+    <div class="pt-0 mt-0 pb-4 mb-1 border-b border-gray-200">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900 mb-1"><?php echo $pageTitle; ?></h1>
+            <p class="text-gray-600">Atur gambar carousel untuk halaman utama website.</p>
         </div>
     </div>
-</nav>
 
-<div class="container-fluid">
-    <div class="row">
-        <?php include 'includes/sidebar.php'; ?>
-        <main role="main" class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom">
-                <div>
-                    <h1 class="h2 fw-bold text-dark mb-1">Kelola Item Carousel</h1>
-                    <p class="text-muted">Atur gambar carousel untuk halaman utama website.</p>
-                </div>
-            </div>
-            <?php if ($message): ?>
-                <?php
-                    $alert_class = 'alert-info';
-                    if ($message_type === 'success') $alert_class = 'alert-success';
-                    if ($message_type === 'danger') $alert_class = 'alert-danger';
-                    $icon_class = ($message_type === 'danger') ? 'bi-exclamation-triangle-fill' : 'bi-check-circle-fill';
-                ?>
-                <div class="alert <?php echo $alert_class; ?> alert-dismissible fade show shadow-sm mb-4" role="alert">
-                    <i class="bi <?php echo $icon_class; ?> me-2"></i> <?php echo htmlspecialchars($message); ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            <?php endif; ?>
+    <?php if ($message): ?>
+        <div class="bg-<?php echo $message_type == 'success' ? 'green' : 'red'; ?>-100 border border-<?php echo $message_type == 'success' ? 'green' : 'red'; ?>-400 text-<?php echo $message_type == 'success' ? 'green' : 'red'; ?>-700 px-4 py-3 rounded mb-4 flex items-center shadow-sm">
+            <i class="bi bi-<?php echo $message_type == 'success' ? 'check-circle-fill' : 'exclamation-triangle-fill'; ?> mr-2"></i> <?php echo htmlspecialchars($message); ?>
+        </div>
+    <?php endif; ?>
 
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-header bg-white py-3">
-                    <h5 class="mb-0 fw-bold"><?php echo isset($_GET['action']) && $_GET['action'] === 'edit' ? 'Edit Item Carousel' : 'Tambah Item Carousel Baru'; ?></h5>
-                </div>
-                <div class="card-body p-4">
-                    <?php
-                    $editItem = null;
-                    if (isset($_GET['action']) && $_GET['action'] === 'edit' && isset($_GET['id'])) {
-                        $editItem = $carouselManager->readById($_GET['id']);
-                    }
-                    ?>
-                    <form action="carousel.php" method="POST" enctype="multipart/form-data">
-                        <?php if ($editItem): ?>
-                            <input type="hidden" name="id" value="<?php echo (int)$editItem->id; ?>">
-                            <input type="hidden" name="current_image_path" value="<?php echo htmlspecialchars($editItem->image_path); ?>">
-                        <?php endif; ?>
+    <!-- Form Section -->
+    <div class="bg-white rounded-lg shadow-md mb-4">
+        <div class="p-4 border-b border-gray-200">
+            <h5 class="font-bold text-lg"><?php echo isset($_GET['action']) && $_GET['action'] === 'edit' ? 'Edit Item Carousel' : 'Tambah Item Carousel Baru'; ?></h5>
+        </div>
+        <div class="p-5">
+            <form action="carousel.php" method="POST" enctype="multipart/form-data">
+                <?php if ($editItem): ?>
+                    <input type="hidden" name="id" value="<?php echo (int)$editItem->id; ?>">
+                    <input type="hidden" name="current_image_path" value="<?php echo htmlspecialchars($editItem->image_path); ?>">
+                <?php endif; ?>
 
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="title" name="title" placeholder="Judul" value="<?php echo htmlspecialchars($editItem->title ?? ''); ?>">
-                                    <label for="title">Judul</label>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Judul</label>
+                        <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" id="title" name="title" placeholder="Judul" value="<?php echo htmlspecialchars($editItem->title ?? ''); ?>">
+                    </div>
+                    <div>
+                        <label for="link" class="block text-sm font-medium text-gray-700 mb-1">Link (opsional)</label>
+                        <input type="url" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" id="link" name="link" placeholder="https://example.com" value="<?php echo htmlspecialchars($editItem->link ?? ''); ?>">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi (opsional)</label>
+                        <textarea class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" id="description" name="description" rows="3" placeholder="Deskripsi singkat..."><?php echo htmlspecialchars($editItem->description ?? ''); ?></textarea>
+                    </div>
+                    <div>
+                        <label for="image" class="block text-sm font-medium text-gray-700 mb-1">Gambar (Unggah Baru)</label>
+                        <input type="file" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" id="image" name="image" accept="image/*">
+                        <div class="mt-2 flex gap-4">
+                            <?php if ($editItem && !empty($editItem->image_path)): ?>
+                                <div>
+                                    <small class="text-gray-500 block mb-1">Saat ini:</small>
+                                    <img src="../<?php echo htmlspecialchars($editItem->image_path); ?>" class="rounded border border-gray-200" style="max-width: 150px;" alt="Current">
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="url" class="form-control" id="link" name="link" placeholder="https://example.com" value="<?php echo htmlspecialchars($editItem->link ?? ''); ?>">
-                                    <label for="link">Link (opsional)</label>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <label for="description" class="form-label">Deskripsi (opsional)</label>
-                                <textarea class="form-control" id="description" name="description" rows="3" placeholder="Deskripsi singkat..."><?php echo htmlspecialchars($editItem->description ?? ''); ?></textarea>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="image" class="form-label">Gambar (Unggah Baru)</label>
-                                <input type="file" class="form-control" id="image" name="image" accept="image/*">
-                                <div class="mt-2 d-flex align-items-start gap-3">
-                                    <?php if ($editItem && !empty($editItem->image_path)): ?>
-                                        <div>
-                                            <small class="text-muted d-block">Saat ini:</small>
-                                            <img src="../<?php echo htmlspecialchars($editItem->image_path); ?>" class="img-thumbnail rounded" style="max-width: 240px;" alt="Current">
-                                        </div>
-                                    <?php endif; ?>
-                                    <div>
-                                        <small class="text-muted d-block">Pratinjau (baru):</small>
-                                        <img id="new_image_preview" class="img-thumbnail rounded d-none" style="max-width: 240px;" alt="Preview">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="item_order" class="form-label">Urutan</label>
-                                <input type="number" class="form-control" id="item_order" name="item_order" value="<?php echo isset($editItem) ? (int)$editItem->item_order : 0; ?>" placeholder="0">
-                                <small class="text-muted">Nomor urutan untuk menentukan posisi carousel (semakin kecil semakin awal)</small>
-                            </div>
-                        </div>
-
-                        <div class="mt-3">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-check-circle me-1"></i> <?php echo isset($editItem) ? 'Perbarui Item' : 'Tambah Item'; ?>
-                            </button>
-                            <?php if ($editItem): ?>
-                                <a href="carousel.php" class="btn btn-outline-secondary ms-2">Batal Edit</a>
                             <?php endif; ?>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white py-3">
-                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                        <h5 class="mb-0 fw-bold">Daftar Item Carousel</h5>
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="d-flex align-items-center gap-2">
-                                <label for="perPageSelect" class="text-muted small mb-0">Show:</label>
-                                <select id="perPageSelect" class="form-select form-select-sm" style="width: auto;" onchange="changePerPage(this.value)">
-                                    <option value="5" <?php echo ($itemsPerPage == 5) ? 'selected' : ''; ?>>5</option>
-                                    <option value="10" <?php echo ($itemsPerPage == 10) ? 'selected' : ''; ?>>10</option>
-                                    <option value="20" <?php echo ($itemsPerPage == 20) ? 'selected' : ''; ?>>20</option>
-                                    <option value="50" <?php echo ($itemsPerPage == 50) ? 'selected' : ''; ?>>50</option>
-                                </select>
-                                <span class="text-muted small">entries</span>
+                            <div id="preview-container" class="hidden">
+                                <small class="text-gray-500 block mb-1">Pratinjau (baru):</small>
+                                <img id="new_image_preview" class="rounded border border-gray-200" style="max-width: 150px;" alt="Preview">
                             </div>
-                            <span class="badge bg-light text-dark border"><?php echo $totalItems; ?> Items</span>
                         </div>
+                    </div>
+                    <div>
+                        <label for="item_order" class="block text-sm font-medium text-gray-700 mb-1">Urutan</label>
+                        <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" id="item_order" name="item_order" value="<?php echo isset($editItem) ? (int)$editItem->item_order : 0; ?>" placeholder="0">
+                        <p class="text-xs text-gray-500 mt-1">Nomor urutan untuk menentukan posisi carousel (semakin kecil semakin awal)</p>
                     </div>
                 </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th class="ps-4" style="width:80px;">No</th>
-                                    <th style="width:200px;">Gambar</th>
-                                    <th>Judul</th>
-                                    <th style="width:100px;">Urutan</th>
-                                    <th class="text-end pe-4" style="width:200px;">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if (count($allCarouselItems) > 0): ?>
-                                    <?php 
-                                    $number = $offset + 1;
-                                    foreach ($carouselItems as $item): 
-                                    ?>
-                                        <tr>
-                                            <td class="ps-4 text-center fw-medium"><?php echo $number++; ?></td>
-                                            <td>
-                                                <img src="../<?php echo htmlspecialchars($item->image_path); ?>" class="img-thumbnail rounded shadow-sm" style="max-width:180px; height:100px; object-fit:cover;" alt="Carousel">
-                                            </td>
-                                            <td class="fw-medium"><?php echo htmlspecialchars($item->title ?? '-'); ?></td>
-                                            <td class="text-center">
-                                                <span class="badge bg-primary bg-opacity-75 rounded-pill px-3"><?php echo (int)$item->item_order; ?></span>
-                                            </td>
-                                            <td class="text-end pe-4">
-                                                <div class="btn-group" role="group">
-                                                    <a href="carousel.php?action=edit&id=<?php echo (int)$item->id; ?>&page=<?php echo $currentPage; ?>" class="btn btn-sm btn-outline-primary">
-                                                        <i class="bi bi-pencil-square"></i> Edit
-                                                    </a>
-                                                    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-delete-id="<?php echo (int)$item->id; ?>" data-delete-page="<?php echo $currentPage; ?>">
-                                                        <i class="bi bi-trash"></i> Hapus
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <tr>
-                                        <td colspan="5" class="text-center text-muted py-5">
-                                            <i class="bi bi-image display-4 d-block mb-3 opacity-50"></i>
-                                            Belum ada item carousel.
-                                        </td>
-                                    </tr>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                    <?php if ($totalPages > 1): ?>
-                        <div class="card-footer bg-white border-top py-3">
-                            <nav aria-label="Navigasi halaman carousel">
-                                <ul class="pagination pagination-sm justify-content-center mb-0">
-                                    <?php if ($currentPage > 1): ?>
-                                        <li class="page-item">
-                                            <a class="page-link" href="?page=<?php echo $currentPage - 1; ?>&per_page=<?php echo $itemsPerPage; ?>">
-                                                <i class="bi bi-chevron-left"></i>
-                                            </a>
-                                        </li>
-                                    <?php else: ?>
-                                        <li class="page-item disabled">
-                                            <span class="page-link"><i class="bi bi-chevron-left"></i></span>
-                                        </li>
-                                    <?php endif; ?>
-                                    
-                                    <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                                    <li class="page-item <?php echo $i === $currentPage ? 'active' : ''; ?>">
-                                            <a class="page-link" href="?page=<?php echo $i; ?>&per_page=<?php echo $itemsPerPage; ?>"><?php echo $i; ?></a>
-                                        </li>
-                                    <?php endfor; ?>
-                                    
-                                    <?php if ($currentPage < $totalPages): ?>
-                                        <li class="page-item">
-                                            <a class="page-link" href="?page=<?php echo $currentPage + 1; ?>&per_page=<?php echo $itemsPerPage; ?>">
-                                                <i class="bi bi-chevron-right"></i>
-                                            </a>
-                                        </li>
-                                    <?php else: ?>
-                                        <li class="page-item disabled">
-                                            <span class="page-link"><i class="bi bi-chevron-right"></i></span>
-                                        </li>
-                                    <?php endif; ?>
-                                </ul>
-                            </nav>
-                        </div>
+
+                <div class="mt-6 flex gap-2">
+                    <button type="submit" style="padding: 0.5rem 1rem; background-color: #D4AF37; color: #1A1A1A; border-radius: 0.5rem; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s; display: flex; align-items: center;"
+                            onmouseover="this.style.backgroundColor='#B5952F'; this.style.transform='translateY(-1px)';"
+                            onmouseout="this.style.backgroundColor='#D4AF37'; this.style.transform='translateY(0)';">
+                        <i class="bi bi-check-circle mr-2"></i> <?php echo isset($editItem) ? 'Perbarui Item' : 'Tambah Item'; ?>
+                    </button>
+                    <?php if ($editItem): ?>
+                        <a href="carousel.php" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-semibold">Batal Edit</a>
                     <?php endif; ?>
                 </div>
-            </div>
-        </main>
+            </form>
+        </div>
     </div>
-</div>
 
-<!-- Modal Konfirmasi Hapus -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow">
-            <div class="modal-header border-bottom-0 pb-0">
-                <h5 class="modal-title fw-bold" id="deleteModalLabel">
-                    <i class="bi bi-exclamation-triangle text-danger me-2"></i>Konfirmasi Hapus
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- List Section -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="p-4 border-b border-gray-200 flex justify-between items-center flex-wrap gap-2">
+            <h5 class="font-bold text-lg">Daftar Item Carousel</h5>
+            <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2">
+                    <label for="perPageSelect" class="text-sm text-gray-600">Tampilkan:</label>
+                    <select id="perPageSelect" class="text-sm border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500" onchange="changePerPage(this.value)">
+                        <option value="5" <?php echo ($itemsPerPage == 5) ? 'selected' : ''; ?>>5</option>
+                        <option value="10" <?php echo ($itemsPerPage == 10) ? 'selected' : ''; ?>>10</option>
+                        <option value="20" <?php echo ($itemsPerPage == 20) ? 'selected' : ''; ?>>20</option>
+                        <option value="50" <?php echo ($itemsPerPage == 50) ? 'selected' : ''; ?>>50</option>
+                    </select>
+                    <span class="text-sm text-gray-600">data</span>
+                </div>
+                <span class="px-3 py-1 bg-gray-100 text-gray-800 text-sm font-semibold rounded-full border border-gray-200"><?php echo $totalItems; ?> Items</span>
             </div>
-            <div class="modal-body pt-3">
-                <p class="mb-0">Apakah Anda yakin ingin menghapus item carousel ini? Tindakan ini tidak dapat dibatalkan.</p>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider pl-8 w-20">No</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-48">Gambar</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Judul</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-24">Urutan</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider pr-8 w-32"></th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <?php if (count($allCarouselItems) > 0): ?>
+                        <?php 
+                        $number = $offset + 1;
+                        foreach ($carouselItems as $item): 
+                        ?>
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 pl-8 text-center font-medium"><?php echo $number++; ?></td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <img src="../<?php echo htmlspecialchars($item->image_path); ?>" class="rounded shadow-sm object-cover h-20 w-32 border border-gray-200" alt="Carousel">
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><?php echo htmlspecialchars($item->title ?? '-'); ?></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-center">
+                                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800"><?php echo (int)$item->item_order; ?></span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-center pr-8">
+                                    <div class="relative inline-block" x-data="{ open: false }">
+                                        <button @click="open = !open" 
+                                                @click.away="open = false"
+                                                style="padding: 0.5rem; border-radius: 0.5rem; transition: all 0.2s; background-color: #F9FAFB; border: 1px solid #E5E7EB;"
+                                                onmouseover="this.style.backgroundColor='#F3F4F6';"
+                                                onmouseout="this.style.backgroundColor='#F9FAFB';">
+                                            <i class="bi bi-three-dots-vertical" style="font-size: 1.125rem; color: #6B7280;"></i>
+                                        </button>
+                                        
+                                        <div x-show="open" 
+                                             x-transition:enter="transition ease-out duration-100"
+                                             x-transition:enter-start="transform opacity-0 scale-95"
+                                             x-transition:enter-end="transform opacity-100 scale-100"
+                                             x-transition:leave="transition ease-in duration-75"
+                                             x-transition:leave-start="transform opacity-100 scale-100"
+                                             x-transition:leave-end="transform opacity-0 scale-95"
+                                             style="display: none; position: absolute; right: 100%; margin-right: 0.5rem; top: 0; width: 10rem; background-color: white; border-radius: 0.5rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05); z-index: 50; border: 1px solid #E5E7EB;"
+                                             @click.away="open = false">
+                                            <div style="padding: 0.25rem;">
+                                                <a href="carousel.php?action=edit&id=<?php echo (int)$item->id; ?>&page=<?php echo $currentPage; ?>" 
+                                                   style="display: flex; align-items: center; padding: 0.625rem 0.75rem; color: #1F2937; border-radius: 0.375rem; text-decoration: none; transition: all 0.15s; font-size: 0.875rem;"
+                                                   onmouseover="this.style.backgroundColor='#EFF6FF'; this.style.color='#1D4ED8';"
+                                                   onmouseout="this.style.backgroundColor='transparent'; this.style.color='#1F2937';">
+                                                    <i class="bi bi-pencil-square" style="margin-right: 0.625rem; font-size: 0.875rem;"></i>
+                                                    <span>Edit Item</span>
+                                                </a>
+                                                <div style="height: 1px; background-color: #E5E7EB; margin: 0.25rem 0;"></div>
+                                                <button type="button"
+                                                   onclick="showDeleteConfirm(<?php echo (int)$item->id; ?>, '<?php echo htmlspecialchars($item->title ?? 'Item ini', ENT_QUOTES); ?>', <?php echo $currentPage; ?>)"
+                                                   style="width: 100%; display: flex; align-items: center; padding: 0.625rem 0.75rem; color: #DC2626; border-radius: 0.375rem; background: none; border: none; cursor: pointer; transition: all 0.15s; font-size: 0.875rem; text-align: left;"
+                                                   onmouseover="this.style.backgroundColor='#FEE2E2'; this.style.color='#B91C1C';"
+                                                   onmouseout="this.style.backgroundColor='transparent'; this.style.color='#DC2626';">
+                                                    <i class="bi bi-trash" style="margin-right: 0.625rem; font-size: 0.875rem;"></i>
+                                                    <span>Hapus Item</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+                                <i class="bi bi-image text-6xl block mb-4 opacity-50"></i>
+                                <p>Belum ada item carousel.</p>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination -->
+        <?php if ($totalPages > 1): ?>
+        <div class="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
+            <div class="flex items-center justify-center">
+                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                    <a href="?page=<?php echo max(1, $currentPage - 1); ?>&per_page=<?php echo $itemsPerPage; ?>" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 <?php echo ($currentPage <= 1) ? 'pointer-events-none opacity-50' : ''; ?>">
+                        <span class="sr-only">Previous</span>
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                    <?php for($i = 1; $i <= $totalPages; $i++): ?>
+                        <a href="?page=<?php echo $i; ?>&per_page=<?php echo $itemsPerPage; ?>" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium <?php echo ($currentPage == $i) ? 'z-10 bg-blue-50 border-blue-500 text-blue-600' : 'text-gray-500 hover:bg-gray-50'; ?>">
+                            <?php echo $i; ?>
+                        </a>
+                    <?php endfor; ?>
+                    <a href="?page=<?php echo min($totalPages, $currentPage + 1); ?>&per_page=<?php echo $itemsPerPage; ?>" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 <?php echo ($currentPage >= $totalPages) ? 'pointer-events-none opacity-50' : ''; ?>">
+                        <span class="sr-only">Next</span>
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </nav>
             </div>
-            <div class="modal-footer border-top-0 pt-0">
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
-                <a href="#" id="confirmDeleteBtn" class="btn btn-danger">
-                    <i class="bi bi-trash me-1"></i> Ya, Hapus
-                </a>
+        </div>
+        <?php endif; ?>
+    </div>
+    
+    <!-- Delete Confirmation Modal -->
+    <div x-show="showDeleteModal" 
+         class="fixed inset-0 z-50 overflow-y-auto" 
+         style="display: none;"
+         aria-labelledby="delete-modal-title" 
+         role="dialog" 
+         aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <div x-show="showDeleteModal" 
+                 x-transition:enter="ease-out duration-300"
+                 x-transition:enter-start="opacity-0"
+                 x-transition:enter-end="opacity-100"
+                 x-transition:leave="ease-in duration-200"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0"
+                 class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" 
+                 @click="showDeleteModal = false"
+                 aria-hidden="true"></div>
+
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            
+            <div x-show="showDeleteModal" 
+                 x-transition:enter="ease-out duration-300"
+                 x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                 x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+                 x-transition:leave="ease-in duration-200"
+                 x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+                 x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                 class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                            <i class="bi bi-exclamation-triangle text-red-600" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="delete-modal-title">
+                                Hapus Item Carousel
+                            </h3>
+                            <div class="mt-2">
+                                <p class="text-sm text-gray-500">
+                                    Apakah Anda yakin ingin menghapus <strong x-text="deleteTitle"></strong>? 
+                                    Tindakan ini tidak dapat dibatalkan.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse gap-3">
+                    <a x-bind:href="'carousel.php?action=delete&id=' + deleteId + '&page=<?php echo $currentPage; ?>'" 
+                       style="display: inline-flex; justify-content: center; align-items: center; width: 100%; padding: 0.5rem 1rem; background-color: #DC2626; color: white; border-radius: 0.5rem; font-weight: 600; text-decoration: none; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);"
+                       onmouseover="this.style.backgroundColor='#B91C1C'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 6px rgba(0,0,0,0.1)';"
+                       onmouseout="this.style.backgroundColor='#DC2626'; this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 2px rgba(0,0,0,0.05)';"
+                       class="sm:w-auto sm:text-sm">
+                        <i class="bi bi-trash mr-2"></i> Ya, Hapus Item
+                    </a>
+                    <button type="button" 
+                            @click="showDeleteModal = false" 
+                            style="display: inline-flex; justify-content: center; align-items: center; width: 100%; margin-top: 0.75rem; padding: 0.5rem 1rem; border: 2px solid #E5E7EB; color: #4B5563; border-radius: 0.5rem; font-weight: 600; background: white; cursor: pointer; transition: all 0.2s;"
+                            onmouseover="this.style.borderColor='#D1D5DB'; this.style.backgroundColor='#F9FAFB';"
+                            onmouseout="this.style.borderColor='#E5E7EB'; this.style.backgroundColor='white';"
+                            class="sm:mt-0 sm:w-auto sm:text-sm">
+                        Batal
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</main>
 
-<script src="../js/bootstrap.bundle.min.js"></script>
+<?php include 'includes/footer.php'; ?>
+
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   const input = document.getElementById('image');
   const preview = document.getElementById('new_image_preview');
+  const previewContainer = document.getElementById('preview-container');
+  
   if (input && preview) {
     input.addEventListener('change', function () {
       const file = this.files && this.files[0] ? this.files[0] : null;
       if (file) {
         preview.src = URL.createObjectURL(file);
-        preview.classList.remove('d-none');
+        previewContainer.classList.remove('hidden');
       } else {
         preview.src = '';
-        preview.classList.add('d-none');
+        previewContainer.classList.add('hidden');
       }
     });
   }
   
-  const deleteModal = document.getElementById('deleteModal');
-  if (deleteModal) {
-    deleteModal.addEventListener('show.bs.modal', function (event) {
-      const button = event.relatedTarget;
-      const deleteId = button.getAttribute('data-delete-id');
-      const deletePage = button.getAttribute('data-delete-page');
-      
-      const confirmBtn = document.getElementById('confirmDeleteBtn');
-      confirmBtn.href = `carousel.php?action=delete&id=${deleteId}&page=${deletePage}`;
-    });
-  }
-  
-  // Per-page selector function
   window.changePerPage = function(perPage) {
     const url = new URL(window.location.href);
     url.searchParams.set('per_page', perPage);
-    url.searchParams.set('page', '1'); // Reset to page 1 when changing per_page
+    url.searchParams.set('page', '1');
     window.location.href = url.toString();
+  };
+  
+  // Delete confirmation modal
+  window.showDeleteConfirm = function(id, title, page) {
+    const modal = document.getElementById('deleteModal');
+    const itemTitle = document.getElementById('deleteItemTitle');
+    const confirmBtn = document.getElementById('confirmDeleteBtn');
+    
+    itemTitle.textContent = title;
+    confirmBtn.href = 'carousel.php?action=delete&id=' + id + '&page=' + page;
+    
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+      modal.querySelector('.modal-content').classList.add('show');
+    }, 10);
+  };
+  
+  window.hideDeleteConfirm = function() {
+    const modal = document.getElementById('deleteModal');
+    modal.querySelector('.modal-content').classList.remove('show');
+    setTimeout(() => {
+      modal.classList.add('hidden');
+    }, 200);
   };
 });
 </script>
-</body>
-</html>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="hidden" style="position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.5); align-items: center; justify-content: center; z-index: 9999;" onclick="hideDeleteConfirm()">
+    <div class="modal-content" style="background: white; border-radius: 0.75rem; max-width: 28rem; width: 90%; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); transform: scale(0.95); opacity: 0; transition: all 0.2s ease-out;" onclick="event.stopPropagation()">
+        <div style="padding: 1.5rem;">
+            <div style="display: flex; align-items: start; gap: 1rem;">
+                <div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 3rem; height: 3rem; border-radius: 50%; background-color: #FEE2E2;">
+                    <i class="bi bi-exclamation-triangle" style="font-size: 1.5rem; color: #DC2626;"></i>
+                </div>
+                <div style="flex: 1;">
+                    <h3 style="font-size: 1.125rem; font-weight: 600; color: #111827; margin: 0 0 0.5rem 0;">Hapus Item Carousel</h3>
+                    <p style="font-size: 0.875rem; color: #6B7280; margin: 0;">
+                        Apakah Anda yakin ingin menghapus <strong id="deleteItemTitle" style="color: #111827;"></strong>? Tindakan ini tidak dapat dibatalkan.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div style="background-color: #F9FAFB; padding: 1rem 1.5rem; border-bottom-left-radius: 0.75rem; border-bottom-right-radius: 0.75rem; display: flex; gap: 0.75rem; justify-content: flex-end;">
+            <button type="button" onclick="hideDeleteConfirm()" 
+                    style="padding: 0.5rem 1rem; border: 2px solid #E5E7EB; color: #4B5563; border-radius: 0.5rem; font-weight: 600; background: white; cursor: pointer; transition: all 0.2s; font-size: 0.875rem;"
+                    onmouseover="this.style.borderColor='#D1D5DB'; this.style.backgroundColor='#F3F4F6';"
+                    onmouseout="this.style.borderColor='#E5E7EB'; this.style.backgroundColor='white';">
+                Batal
+            </button>
+            <a id="confirmDeleteBtn" href="#" 
+               style="display: inline-flex; align-items: center; padding: 0.5rem 1rem; background-color: #DC2626; color: white; border-radius: 0.5rem; font-weight: 600; text-decoration: none; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05); font-size: 0.875rem;"
+               onmouseover="this.style.backgroundColor='#B91C1C'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 6px rgba(0,0,0,0.1)';"
+               onmouseout="this.style.backgroundColor='#DC2626'; this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 2px rgba(0,0,0,0.05)';">
+                <i class="bi bi-trash mr-2"></i> Ya, Hapus Item
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.modal-content.show {
+    transform: scale(1) !important;
+    opacity: 1 !important;
+}
+#deleteModal.hidden {
+    display: none !important;
+}
+#deleteModal {
+    display: flex !important;
+}
+</style>
+

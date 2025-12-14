@@ -171,13 +171,12 @@ class ParfumManager {
     }
 
     // R (Read): Mengambil data Parfum dengan Filter
-    public function readWithFilters($genders = [], $sizes = []) {
+    public function readWithFilters($genders = [], $sizes = [], $kategoris = []) {
         // Ganti nama tabel: parfum -> parfums
         $sql = "SELECT * FROM parfums WHERE 1=1";
         $params = [];
 
         if (!empty($genders)) {
-            // PERBAIKAN: Ganti 'kategori' menjadi 'gender' untuk sinkronisasi filter
             $sql .= " AND gender IN (" . implode(',', array_fill(0, count($genders), '?')) . ")";
             $params = array_merge($params, $genders);
         }
@@ -188,28 +187,17 @@ class ParfumManager {
             $params = array_merge($params, $sizes);
         }
 
+        if (!empty($kategoris)) {
+            $sql .= " AND kategori IN (" . implode(',', array_fill(0, count($kategoris), '?')) . ")";
+            $params = array_merge($params, $kategoris);
+        }
+
         $stmt = $this->conn->prepare($sql);
         $stmt->execute($params);
 
         $parfums = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $p = new Parfum();
-            $p->setId($row['id']);
-            $p->setNama($row['nama']);
-            $p->setMerek($row['merek']);
-            $p->setKategori($row['kategori']);
-            $p->setGender($row['gender']); // Jangan lupa set Gender
-            $p->setUkuran($row['ukuran']); // Jangan lupa set Ukuran
-            $p->setHarga($row['harga']);
-            $p->setStok($row['stok']);
-            $p->setDeskripsi($row['deskripsi']);
-            if (isset($row['image_path'])) {
-                $p->setImagePath($row['image_path']);
-            }
-            if (isset($row['is_best_seller'])) {
-                $p->setIsBestSeller($row['is_best_seller']);
-            }
-            $parfums[] = $p;
+            $parfums[] = $this->mapRowToParfum($row);
         }
 
         return $parfums;

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 30 Nov 2025 pada 10.10
+-- Waktu pembuatan: 14 Des 2025 pada 11.14
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -132,7 +132,11 @@ INSERT INTO `orders` (`id`, `user_id`, `nomor_pesanan`, `nama_penerima`, `alamat
 (33, 5, 'INV/20251125-164735/U5/588', 'asdasd', 'asdqweq', '081231232222', 99999999.99, 'Bank Transfer', 'Dibatalkan', 'img/payment_proofs/1764086863_WhatsApp Image 2025-11-15 at 17.48.40.jpeg', '2025-11-25 22:47:35'),
 (34, 5, 'INV/20251125-170917/U5/229', 'dasdas', 'aseqweqweq', '081239123123', 819334.00, 'Bank Transfer', 'Menunggu Konfirmasi', 'img/payment_proofs/1764088037_WhatsApp Image 2025-11-15 at 17.48.40.jpeg', '2025-11-25 23:09:17'),
 (35, 5, 'INV/20251128-123733/U5/344', 'asda', 'aseasqas', '1231231', 319101.00, 'Bank Transfer', 'Menunggu Konfirmasi', 'img/payment_proofs/1764329861_WhatsApp Image 2025-11-15 at 17.48.40.jpeg', '2025-11-28 18:37:33'),
-(36, 5, 'INV/20251129-014259/U5/720', 'asdasd', 'khugkjk', '0812123123123', 368996.00, 'Bank Transfer', 'Selesai', 'img/payment_proofs/1764376991_WhatsApp Image 2025-11-15 at 17.48.40.jpeg', '2025-11-29 07:42:59');
+(36, 5, 'INV/20251129-014259/U5/720', 'asdasd', 'khugkjk', '0812123123123', 368996.00, 'Bank Transfer', 'Selesai', 'img/payment_proofs/1764376991_WhatsApp Image 2025-11-15 at 17.48.40.jpeg', '2025-11-29 07:42:59'),
+(37, 5, 'INV/20251213-072430/U5/641', 'asda', 'asdasdad', '081231232222', 99999999.99, 'Bank Transfer', 'Pending', NULL, '2025-12-13 13:24:30'),
+(38, 5, 'INV/20251214-051607/U5/661', 'sukron', 'asdjalkwoeqn', '08129381231', 3600000.00, 'Bank Transfer', 'Pending', NULL, '2025-12-14 11:16:07'),
+(39, 5, 'INV/20251214-053250/U5/500', 'daffa', 'pamulang barat', '085211439743', 99999999.99, 'Bank Transfer', 'Menunggu Konfirmasi', 'uploads/payment_proofs/ORDER_39_1765687647.png', '2025-12-14 11:32:50'),
+(40, 5, 'INV/20251214-105544/U5/977', 'daffa', 'pamulang barat', '085211439743', 99999999.99, 'Bank Transfer', 'Menunggu Konfirmasi', 'uploads/payment_proofs/ORDER_40_1765706439.png', '2025-12-14 16:55:44');
 
 -- --------------------------------------------------------
 
@@ -169,7 +173,11 @@ INSERT INTO `order_items` (`id`, `order_id`, `parfum_id`, `jumlah`, `harga_saat_
 (37, 33, 1, 1, 99999999.99),
 (38, 34, 6, 1, 819334.00),
 (39, 35, 8, 1, 319101.00),
-(40, 36, 16, 1, 368996.00);
+(40, 36, 16, 1, 368996.00),
+(41, 37, 1, 2, 99999999.99),
+(42, 38, 2, 3, 1200000.00),
+(43, 39, 1, 1, 99999999.99),
+(44, 40, 1, 1, 99999999.99);
 
 -- --------------------------------------------------------
 
@@ -196,8 +204,8 @@ CREATE TABLE `parfums` (
 --
 
 INSERT INTO `parfums` (`id`, `nama`, `merek`, `kategori`, `gender`, `ukuran`, `harga`, `stok`, `deskripsi`, `image_path`, `is_best_seller`) VALUES
-(1, 'Azure Coast', 'Koda Essence', 'Fresh', 'Male', 100, 100000000, 7, 'Aroma citrus yang tajam dengan sentuhan air laut yang menyegarkan, sempurna untuk pria yang aktif dan dinamis sepanjang hari.', 'img/products/68fa1d4ccde60_d.png', 1),
-(2, 'Terra Mystique', 'Bleu Majestic', 'Woody', 'Female', 50, 1200000, 19, 'Keharuman hutan setelah hujan, memadukan patchouli dan lumut dengan sedikit vanilla untuk menciptakan aura misterius dan elegan.', 'img/products/68fa261ebaa58_Beauty_product_PSD__High_Quality_Free_PSD_Templates_for_Download___Freepik-removebg-preview.png', 1),
+(1, 'Azure Coast', 'Koda Essence', 'Fresh', 'Male', 100, 100000000, 3, 'Aroma citrus yang tajam dengan sentuhan air laut yang menyegarkan, sempurna untuk pria yang aktif dan dinamis sepanjang hari.', 'img/products/68fa1d4ccde60_d.png', 1),
+(2, 'Terra Mystique', 'Bleu Majestic', 'Woody', 'Female', 50, 1200000, 16, 'Keharuman hutan setelah hujan, memadukan patchouli dan lumut dengan sedikit vanilla untuk menciptakan aura misterius dan elegan.', 'img/products/68fa261ebaa58_Beauty_product_PSD__High_Quality_Free_PSD_Templates_for_Download___Freepik-removebg-preview.png', 1),
 (3, 'Bloom Night', 'Ethereal Essence', 'Floral', 'Male', 50, 812501, 25, 'Parfum floral yang berani untuk pria. Perpaduan lavender gelap dan patchouli, unik dan memikat, cocok untuk acara malam.', 'img/products/68fa3b207c61e_68415c74e4b35.jpg', 0),
 (4, 'Aqua Vert', 'Ethereal Essence', 'Fresh', 'Male', 100, 424843, 16, 'Kombinasi sea salt dan grapefruit yang sangat jernih. Aroma fresh klasik yang tak lekang oleh waktu, memberikan kesegaran maksimal.', 'img/products/68fa3c746db00_Blue_Perfume_Bottle_Transparent_Background__Perfume_Bottles__Perfume__Bottle_PNG_Transparent_Image_and_Clipart_for_Free_Download-removebg-preview.png', 0),
 (5, 'Artisan Bouquet', 'Creazione Atelier', 'Floral', 'Male', 200, 555862, 11, 'Sentuhan artisanal dengan inti bunga iris dan violet. Memberikan kesan powdery yang lembut dan dewasa. Ukuran jumbo untuk pemakaian harian.', 'img/products/68fa3b6f13afa_aromatic.png', 0),
@@ -238,7 +246,7 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`id`, `username`, `full_name`, `email`, `phone`, `address`, `password`, `role`, `is_active`) VALUES
 (3, 'admin', NULL, NULL, NULL, NULL, '$2y$10$rh11him9CAJj94FtYMHtVebwE2v6ugP05FoK36YD..5PwtvYNj7iy', 'admin', 1),
-(4, 'daffa', 'Daffa Test Update', 'daffa@test.com', '081234567890', 'Jl. Test No. 123', '$2y$10$w5W3v4Ra4ObR.NIS4Pm4ruEpGEuXO/zJTnr.h3KXT5YyphbFichx.', 'user', 0),
+(4, 'daffa', 'Daffa Test Update', 'daffa@test.com', '081234567890', 'Jl. Test No. 123', '$2y$10$w5W3v4Ra4ObR.NIS4Pm4ruEpGEuXO/zJTnr.h3KXT5YyphbFichx.', 'user', 1),
 (5, 'user1', 'daffa', 'dapa@gmail.com', '085211439743', 'pamulang barat', '$2y$10$7PD3BE5u4wHY2FN/ekfr8OhOE6jMdcT4aHewShkBBm.PmiBkCe/Ci', 'user', 1);
 
 -- --------------------------------------------------------
@@ -259,7 +267,7 @@ CREATE TABLE `user_carts` (
 
 INSERT INTO `user_carts` (`user_id`, `cart_data`, `updated_at`) VALUES
 (4, '[]', '2025-11-23 21:12:42'),
-(5, '[]', '2025-11-29 07:42:59');
+(5, '[]', '2025-12-14 16:55:44');
 
 -- --------------------------------------------------------
 
@@ -358,25 +366,25 @@ ALTER TABLE `about_us_list_items`
 -- AUTO_INCREMENT untuk tabel `carousel_items`
 --
 ALTER TABLE `carousel_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT untuk tabel `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT untuk tabel `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT untuk tabel `parfums`
 --
 ALTER TABLE `parfums`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT untuk tabel `user`

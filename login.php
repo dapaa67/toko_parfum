@@ -2,21 +2,17 @@
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
-// Pastikan path ke models/AuthManager.php sudah benar
 require_once 'models/AuthManager.php';
 
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $auth = new AuthManager();
-    // Panggil method login dari Class AuthManager (OOP)
     $role = $auth->login($_POST['username'], $_POST['password']);
     
     if ($role === 'admin') {
-        // Arahkan Admin ke Dashboard CRUD
         header('Location: admin/dashboard.php');
         exit();
     } else if ($role === 'user') {
-        // Arahkan User ke Halaman Utama
         header('Location: index.php');
         exit();
     } else {
@@ -28,123 +24,175 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login Admin Toko Parfum</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - ParfumMY</title>
+    <link href="css/output.css" rel="stylesheet">
     <link href="css/bootstrap-icons.css" rel="stylesheet">
+    <script defer src="js/alpine.min.js"></script>
     <style>
-        :root {
-            --black: #000000;
-            --white: #ffffff;
-            --gray-light: #f8f9fa;
-        }
         body {
-            /* Background gradien gelap seperti di contoh */
-            background: linear-gradient(135deg, #0a192f 0%, #040c18 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
+            background: linear-gradient(135deg, #FDFBF7 0%, #F5F1E8 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
         }
-        .card {
-            border-radius: 1rem;
-            box-shadow: 0 0.5rem 1.25rem rgba(0,0,0,0.25);
-            border: none;
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .login-container {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        .brand-side {
+            background: linear-gradient(135deg, #D4AF37 0%, #B5952F 100%);
+            position: relative;
             overflow: hidden;
         }
         
-        /* Kolom gambar di kiri dengan text overlay */
-        .login-img-col {
-            /* Ganti URL gambar sesuai keinginanmu */
-            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), 
-                        url('https://images.unsplash.com/photo-1585399001834-d29f7036b134?auto=format&fit=crop&w=600&q=80') center/cover;
-            color: var(--white);
-            min-height: 250px;
+        .brand-side::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
         }
         
-        /* Kolom form di kanan */
-        .form-col {
-            background-color: var(--white);
-            color: #1a1a1a;
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.1); opacity: 0.5; }
         }
         
-        .btn-dark {
-            font-weight: 600;
-        }
-        
-        /* Hilangkan style focus gold */
-        .form-control:focus {
-            border-color: #86b7fe;
-            box-shadow: 0 0 0 .25rem rgba(13,110,253,.25);
-        }
-        
-        .toggle-password-btn {
-            border-color: #ced4da;
-            color: #6c757d;
-        }
-        .toggle-password-btn:hover {
-            color: #212529;
+        .form-input:focus {
+            border-color: #D4AF37;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-10 col-xl-9">
-                <div class="card">
-                    <div class="row g-0">
+<body class="flex justify-center items-center min-h-screen p-4" x-data="{ showPassword: false }">
+    
+    <div class="login-container w-full max-w-5xl">
+        <div style="background: white; border-radius: 1.5rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15); overflow: hidden;">
+            <div class="flex flex-wrap">
+                
+                <!-- Left Side - Brand -->
+                <div class="w-full md:w-2/5 brand-side p-12 flex flex-col justify-center text-white min-h-[400px] relative z-10">
+                    <div style="margin-bottom: 2rem;">
+                        <div style="width: 4rem; height: 4rem; background: rgba(255,255,255,0.2); border-radius: 1rem; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; backdrop-filter: blur(10px);">
+                            <i class="bi bi-box-seam" style="font-size: 2rem;"></i>
+                        </div>
+                        <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 0.75rem; line-height: 1.2;">ParfumMY</h1>
+                        <p style="font-size: 1.125rem; opacity: 0.95; line-height: 1.6;">
+                            Temukan aroma kepribadian Anda dengan koleksi parfum eksklusif kami
+                        </p>
+                    </div>
+                    
+                    <div style="margin-top: auto; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.2);">
+                        <div style="display: flex; gap: 1.5rem; opacity: 0.9;">
+                            <div>
+                                <i class="bi bi-shield-check" style="font-size: 1.25rem; margin-right: 0.5rem;"></i>
+                                <span style="font-size: 0.875rem;">100% Original</span>
+                            </div>
+                            <div>
+                                <i class="bi bi-truck" style="font-size: 1.25rem; margin-right: 0.5rem;"></i>
+                                <span style="font-size: 0.875rem;">Gratis Ongkir</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Side - Login Form -->
+                <div class="w-full md:w-3/5 p-8 md:p-12">
+                    <div style="max-width: 24rem; margin: 0 auto;">
                         
-                        <div class="col-md-6 login-img-col d-flex flex-column justify-content-center p-4 p-md-5">
-                            <h2 class="fw-bold">Selamat Datang</h2>
-                            <p class="lead mb-0">Masuk untuk melanjutkan belanja, melihat riwayat pesanan, dan mengelola akun Anda.</p>
+                        <div style="text-align: center; margin-bottom: 2rem;">
+                            <h2 style="font-size: 1.875rem; font-weight: 700; color: #1A1A1A; margin-bottom: 0.5rem;">Selamat Datang Kembali</h2>
+                            <p style="color: #6B7280; font-size: 0.9375rem;">Masuk untuk melanjutkan belanja Anda</p>
                         </div>
                         
-                        <div class="col-md-6 form-col">
-                            <div class="card-body p-4 p-md-5">
-                                
-                                <h3 class="fw-bold mb-4 text-center">Login Akun</h3>
-                                
-                                <?php if ($error): ?>
-                                    <div class="alert alert-danger"><?php echo $error; ?></div>
-                                <?php endif; ?>
-                                
-                                <form method="POST" novalidate>
-                                    <div class="mb-3">
-                                        <label for="username" class="form-label">Username</label>
-                                        <input type="text" class="form-control" id="username" name="username" required>
-                                    </div>
-                       
-                                                 <div class="mb-3 position-relative">
-                                        <label for="password" class="form-label">Password</label>
-                                        <input type="password" class="form-control" id="password" name="password" required>
-                                        <button type="button" class="btn btn-sm btn-outline-secondary toggle-password-btn position-absolute top-50 end-0 translate-middle-y me-2" id="togglePassword" aria-label="Show password" style="margin-top: 19px;"> <i class="bi bi-eye"></i>
-                                        </button>
-                                    </div>
-                                    
-                                    <button type="submit" class="btn btn-dark w-100 mt-3">Login</button>
-                                </form>
-                                
-                                <div class="mt-3 text-center">
-                                    <small>Kembali ke <a class="text-decoration-none" href="index.php">Halaman Utama</a></small>
-                                    <small class="d-block mt-1">Belum punya akun? <a href="register.php" class="text-decoration-none">Daftar di sini</a></small>
-                                </div>
+                        <?php if ($error): ?>
+                            <div style="background-color: #FEE2E2; border-left: 4px solid #DC2626; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem;">
+                                <p style="margin: 0; color: #991B1B; font-size: 0.875rem;">
+                                    <i class="bi bi-exclamation-circle-fill" style="margin-right: 0.5rem;"></i>
+                                    <?php echo htmlspecialchars($error); ?>
+                                </p>
                             </div>
-                        </div> </div> </div> </div> </div> </div> <script>
-document.addEventListener('DOMContentLoaded', function () {
-  const toggle = document.getElementById('togglePassword');
-  const pwd = document.getElementById('password');
-  const user = document.getElementById('username');
-  if (user) user.focus();
-  if (toggle && pwd) {
-    toggle.addEventListener('click', function () {
-      const isText = pwd.getAttribute('type') === 'text';
-      pwd.setAttribute('type', isText ? 'password' : 'text');
-      this.innerHTML = isText ? '<i class="bi bi-eye"></i>' : '<i class="bi bi-eye-slash"></i>';
-      this.setAttribute('aria-label', isText ? 'Show password' : 'Hide password');
-    });
-  }
-});
-</script>
-<script src="js/bootstrap.bundle.min.js"></script>
+                        <?php endif; ?>
+                        
+                        <form method="POST" style="margin-bottom: 1.5rem;">
+                            <!-- Username -->
+                            <div style="margin-bottom: 1.25rem;">
+                                <label for="username" style="display: block; font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">
+                                    <i class="bi bi-person" style="margin-right: 0.375rem; color: #D4AF37;"></i> Username
+                                </label>
+                                <input type="text" 
+                                       class="form-input"
+                                       style="width: 100%; padding: 0.75rem 1rem; border: 2px solid #E5E7EB; border-radius: 0.5rem; font-size: 0.9375rem; transition: all 0.2s; outline: none;"
+                                       id="username" 
+                                       name="username" 
+                                       placeholder="Masukkan username Anda"
+                                       required>
+                            </div>
+                            
+                            <!-- Password -->
+                            <div style="margin-bottom: 1.5rem; position: relative;">
+                                <label for="password" style="display: block; font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">
+                                    <i class="bi bi-lock" style="margin-right: 0.375rem; color: #D4AF37;"></i> Password
+                                </label>
+                                <input :type="showPassword ? 'text' : 'password'" 
+                                       class="form-input"
+                                       style="width: 100%; padding: 0.75rem 1rem; padding-right: 3rem; border: 2px solid #E5E7EB; border-radius: 0.5rem; font-size: 0.9375rem; transition: all 0.2s; outline: none;"
+                                       id="password" 
+                                       name="password" 
+                                       placeholder="Masukkan password Anda"
+                                       required>
+                                <button type="button" 
+                                        @click="showPassword = !showPassword"
+                                        style="position: absolute; right: 1rem; top: 2.375rem; color: #9CA3AF; background: none; border: none; cursor: pointer; transition: color 0.2s;"
+                                        onmouseover="this.style.color='#6B7280';"
+                                        onmouseout="this.style.color='#9CA3AF';">
+                                    <i :class="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'" style="font-size: 1.125rem;"></i>
+                                </button>
+                            </div>
+                            
+                            <!-- Submit Button -->
+                            <button type="submit" 
+                                    style="width: 100%; background-color: #D4AF37; color: #1A1A1A; font-weight: 600; padding: 0.875rem 1.5rem; border-radius: 0.5rem; border: none; cursor: pointer; transition: all 0.2s; font-size: 1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);"
+                                    onmouseover="this.style.backgroundColor='#B5952F'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 15px rgba(0,0,0,0.15)';"
+                                    onmouseout="this.style.backgroundColor='#D4AF37'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px rgba(0,0,0,0.1)';">
+                                <i class="bi bi-box-arrow-in-right" style="margin-right: 0.5rem;"></i> Masuk
+                            </button>
+                        </form>
+                        
+                        <!-- Links -->
+                        <div style="text-align: center; padding-top: 1.5rem; border-top: 1px solid #E5E7EB;">
+                            <p style="margin: 0 0 0.75rem 0; color: #6B7280; font-size: 0.875rem;">
+                                <i class="bi bi-arrow-left" style="margin-right: 0.25rem;"></i>
+                                <a href="index.php" style="color: #D4AF37; text-decoration: none; font-weight: 500; transition: color 0.2s;"
+                                   onmouseover="this.style.color='#B5952F';"
+                                   onmouseout="this.style.color='#D4AF37';">
+                                    Kembali ke Homepage
+                                </a>
+                            </p>
+                            <p style="margin: 0; color: #6B7280; font-size: 0.875rem;">
+                                Belum punya akun? 
+                                <a href="register.php" style="color: #D4AF37; text-decoration: none; font-weight: 500; transition: color 0.2s;"
+                                   onmouseover="this.style.color='#B5952F';"
+                                   onmouseout="this.style.color='#D4AF37';">
+                                    Daftar Sekarang
+                                </a>
+                            </p>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    
 </body>
 </html>

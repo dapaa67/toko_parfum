@@ -1,116 +1,128 @@
 <!-- Modal Konfirmasi Setujui Pembayaran -->
-<div class="modal fade" id="approvePaymentModal" tabindex="-1" aria-labelledby="approvePaymentModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg">
-            <div class="modal-header bg-success bg-gradient text-white border-0">
-                <h5 class="modal-title fw-bold d-flex align-items-center" id="approvePaymentModalLabel">
-                    <i class="bi bi-check-circle-fill me-2 fs-4"></i>
-                    <span>Konfirmasi Setujui Pembayaran</span>
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body p-4">
-                <div class="text-center mb-3">
-                    <i class="bi bi-credit-card-2-front-fill text-success" style="font-size: 3rem;"></i>
+<div id="approveModal" class="hidden" style="position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.5); align-items: center; justify-content: center; z-index: 9999;" onclick="hideApproveModal()">
+    <div class="modal-content" style="background: white; border-radius: 0.75rem; max-width: 32rem; width: 90%; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); transform: scale(0.95); opacity: 0; transition: all 0.2s ease-out;" onclick="event.stopPropagation()">
+        <div style="padding: 1.5rem; background-color: #ECFDF5; border-bottom: 1px solid #D1FAE5; border-top-left-radius: 0.75rem; border-top-right-radius: 0.75rem;">
+            <div style="display: flex; align-items: start; gap: 1rem;">
+                <div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 3rem; height: 3rem; border-radius: 50%; background-color: #D1FAE5;">
+                    <i class="bi bi-check-circle-fill" style="font-size: 1.5rem; color: #059669;"></i>
                 </div>
-                <p class="text-center mb-2 text-muted">Apakah Anda yakin ingin menyetujui pembayaran pesanan ini?</p>
-                <div class="alert alert-success border-success d-flex align-items-center mb-0">
-                    <i class="bi bi-info-circle-fill me-2 fs-5"></i>
-                    <div>
+                <div style="flex: 1;">
+                    <h3 style="font-size: 1.125rem; font-weight: 600; color: #111827; margin: 0 0 0.5rem 0;">Konfirmasi Setujui Pembayaran</h3>
+                    <p style="font-size: 0.875rem; color: #6B7280; margin: 0;">
+                        Apakah Anda yakin ingin menyetujui pembayaran pesanan ini?
+                    </p>
+                    <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: #D1FAE5; border-radius: 0.375rem; color: #065F46; font-size: 0.75rem;">
                         <strong>Informasi:</strong> Status pesanan akan berubah menjadi "Selesai" dan stok produk akan dikurangi.
                     </div>
                 </div>
             </div>
-            <div class="modal-footer bg-light border-0">
-                <form action="process_payment.php" method="POST" class="w-100 d-flex justify-content-end gap-2">
-                    <input type="hidden" name="order_id" id="approveOrderId">
-                    <input type="hidden" name="action" value="approve">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="bi bi-x-circle me-1"></i> Batal
-                    </button>
-                    <button type="submit" class="btn btn-success">
-                        <i class="bi bi-check-circle me-1"></i> Ya, Setujui Pembayaran
-                    </button>
-                </form>
-            </div>
+        </div>
+        <div style="background-color: #F9FAFB; padding: 1rem 1.5rem; border-bottom-left-radius: 0.75rem; border-bottom-right-radius: 0.75rem; display: flex; gap: 0.75rem; justify-content: flex-end;">
+            <form action="process_payment.php" method="POST" style="display: flex; gap: 0.75rem; width: 100%; justify-content: flex-end;">
+                <input type="hidden" name="order_id" id="approveOrderId">
+                <input type="hidden" name="action" value="approve">
+                <button type="button" onclick="hideApproveModal()" 
+                        style="padding: 0.5rem 1rem; border: 2px solid #E5E7EB; color: #4B5563; border-radius: 0.5rem; font-weight: 600; background: white; cursor: pointer; transition: all 0.2s; font-size: 0.875rem;"
+                        onmouseover="this.style.borderColor='#D1D5DB'; this.style.backgroundColor='#F3F4F6';"
+                        onmouseout="this.style.borderColor='#E5E7EB'; this.style.backgroundColor='white';">
+                    Batal
+                </button>
+                <button type="submit" 
+                        style="display: inline-flex; align-items: center; padding: 0.5rem 1rem; background-color: #059669; color: white; border-radius: 0.5rem; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05); font-size: 0.875rem;"
+                        onmouseover="this.style.backgroundColor='#047857'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 6px rgba(0,0,0,0.1)';"
+                        onmouseout="this.style.backgroundColor='#059669'; this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 2px rgba(0,0,0,0.05)';">
+                    <i class="bi bi-check-circle mr-2"></i> Ya, Setujui
+                </button>
+            </form>
         </div>
     </div>
 </div>
 
 <!-- Modal Konfirmasi Tolak Pembayaran -->
-<div class="modal fade" id="rejectPaymentModal" tabindex="-1" aria-labelledby="rejectPaymentModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg">
-            <div class="modal-header bg-danger bg-gradient text-white border-0">
-                <h5 class="modal-title fw-bold d-flex align-items-center" id="rejectPaymentModalLabel">
-                    <i class="bi bi-x-circle-fill me-2 fs-4"></i>
-                    <span>Konfirmasi Tolak Pembayaran</span>
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body p-4">
-                <div class="text-center mb-3">
-                    <i class="bi bi-exclamation-triangle-fill text-danger" style="font-size: 3rem;"></i>
+<div id="rejectModal" class="hidden" style="position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.5); align-items: center; justify-content: center; z-index: 9999;" onclick="hideRejectModal()">
+    <div class="modal-content" style="background: white; border-radius: 0.75rem; max-width: 32rem; width: 90%; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); transform: scale(0.95); opacity: 0; transition: all 0.2s ease-out;" onclick="event.stopPropagation()">
+        <div style="padding: 1.5rem; background-color: #FEF2F2; border-bottom: 1px solid #FEE2E2; border-top-left-radius: 0.75rem; border-top-right-radius: 0.75rem;">
+            <div style="display: flex; align-items: start; gap: 1rem;">
+                <div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 3rem; height: 3rem; border-radius: 50%; background-color: #FEE2E2;">
+                    <i class="bi bi-x-circle-fill" style="font-size: 1.5rem; color: #DC2626;"></i>
                 </div>
-                <p class="text-center mb-2 text-muted">Apakah Anda yakin ingin menolak pembayaran pesanan ini?</p>
-                <div class="alert alert-warning border-warning d-flex align-items-center mb-0">
-                    <i class="bi bi-info-circle-fill me-2 fs-5"></i>
-                    <div>
+                <div style="flex: 1;">
+                    <h3 style="font-size: 1.125rem; font-weight: 600; color: #111827; margin: 0 0 0.5rem 0;">Konfirmasi Tolak Pembayaran</h3>
+                    <p style="font-size: 0.875rem; color: #6B7280; margin: 0;">
+                        Apakah Anda yakin ingin menolak pembayaran pesanan ini?
+                    </p>
+                    <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: #FEE2E2; border-radius: 0.375rem; color: #991B1B; font-size: 0.75rem;">
                         <strong>Perhatian:</strong> Status pesanan akan berubah menjadi "Dibatalkan".
                     </div>
                 </div>
             </div>
-            <div class="modal-footer bg-light border-0">
-                <form action="process_payment.php" method="POST" class="w-100 d-flex justify-content-end gap-2">
-                    <input type="hidden" name="order_id" id="rejectOrderId">
-                    <input type="hidden" name="action" value="reject">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="bi bi-x-circle me-1"></i> Batal
-                    </button>
-                    <button type="submit" class="btn btn-danger">
-                        <i class="bi bi-x-circle me-1"></i> Ya, Tolak Pembayaran
-                    </button>
-                </form>
-            </div>
+        </div>
+        <div style="background-color: #F9FAFB; padding: 1rem 1.5rem; border-bottom-left-radius: 0.75rem; border-bottom-right-radius: 0.75rem; display: flex; gap: 0.75rem; justify-content: flex-end;">
+            <form action="process_payment.php" method="POST" style="display: flex; gap: 0.75rem; width: 100%; justify-content: flex-end;">
+                <input type="hidden" name="order_id" id="rejectOrderId">
+                <input type="hidden" name="action" value="reject">
+                <button type="button" onclick="hideRejectModal()" 
+                        style="padding: 0.5rem 1rem; border: 2px solid #E5E7EB; color: #4B5563; border-radius: 0.5rem; font-weight: 600; background: white; cursor: pointer; transition: all 0.2s; font-size: 0.875rem;"
+                        onmouseover="this.style.borderColor='#D1D5DB'; this.style.backgroundColor='#F3F4F6';"
+                        onmouseout="this.style.borderColor='#E5E7EB'; this.style.backgroundColor='white';">
+                    Batal
+                </button>
+                <button type="submit" 
+                        style="display: inline-flex; align-items: center; padding: 0.5rem 1rem; background-color: #DC2626; color: white; border-radius: 0.5rem; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05); font-size: 0.875rem;"
+                        onmouseover="this.style.backgroundColor='#B91C1C'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 6px rgba(0,0,0,0.1)';"
+                        onmouseout="this.style.backgroundColor='#DC2626'; this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 2px rgba(0,0,0,0.05)';">
+                    <i class="bi bi-x-circle mr-2"></i> Ya, Tolak
+                </button>
+            </form>
         </div>
     </div>
 </div>
 
 <!-- Modal Konfirmasi Selesaikan COD -->
-<div class="modal fade" id="completeCodModal" tabindex="-1" aria-labelledby="completeCodModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg">
-            <div class="modal-header bg-primary bg-gradient text-white border-0">
-                <h5 class="modal-title fw-bold d-flex align-items-center" id="completeCodModalLabel">
-                    <i class="bi bi-check2-circle me-2 fs-4"></i>
-                    <span>Konfirmasi Selesaikan Pesanan COD</span>
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body p-4">
-                <div class="text-center mb-3">
-                    <i class="bi bi-cash-coin text-primary" style="font-size: 3rem;"></i>
+<div id="codModal" class="hidden" style="position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.5); align-items: center; justify-content: center; z-index: 9999;" onclick="hideCodModal()">
+    <div class="modal-content" style="background: white; border-radius: 0.75rem; max-width: 32rem; width: 90%; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); transform: scale(0.95); opacity: 0; transition: all 0.2s ease-out;" onclick="event.stopPropagation()">
+        <div style="padding: 1.5rem; background-color: #EFF6FF; border-bottom: 1px solid #DBEAFE; border-top-left-radius: 0.75rem; border-top-right-radius: 0.75rem;">
+            <div style="display: flex; align-items: start; gap: 1rem;">
+                <div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 3rem; height: 3rem; border-radius: 50%; background-color: #DBEAFE;">
+                    <i class="bi bi-check2-circle" style="font-size: 1.5rem; color: #2563EB;"></i>
                 </div>
-                <p class="text-center mb-2 text-muted">Apakah Anda yakin pesanan COD ini sudah selesai dan telah dibayar?</p>
-                <div class="alert alert-info border-info d-flex align-items-center mb-0">
-                    <i class="bi bi-info-circle-fill me-2 fs-5"></i>
-                    <div>
+                <div style="flex: 1;">
+                    <h3 style="font-size: 1.125rem; font-weight: 600; color: #111827; margin: 0 0 0.5rem 0;">Konfirmasi Selesaikan Pesanan COD</h3>
+                    <p style="font-size: 0.875rem; color: #6B7280; margin: 0;">
+                        Apakah Anda yakin pesanan COD ini sudah selesai dan telah dibayar?
+                    </p>
+                    <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: #DBEAFE; border-radius: 0.375rem; color: #1E40AF; font-size: 0.75rem;">
                         <strong>Informasi:</strong> Status pesanan akan berubah menjadi "Selesai".
                     </div>
                 </div>
             </div>
-            <div class="modal-footer bg-light border-0">
-                <form action="process_payment.php" method="POST" class="w-100 d-flex justify-content-end gap-2">
-                    <input type="hidden" name="order_id" id="codOrderId">
-                    <input type="hidden" name="action" value="complete_cod">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="bi bi-x-circle me-1"></i> Batal
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-check2-circle me-1"></i> Ya, Selesaikan Pesanan
-                    </button>
-                </form>
-            </div>
+        </div>
+        <div style="background-color: #F9FAFB; padding: 1rem 1.5rem; border-bottom-left-radius: 0.75rem; border-bottom-right-radius: 0.75rem; display: flex; gap: 0.75rem; justify-content: flex-end;">
+            <form action="process_payment.php" method="POST" style="display: flex; gap: 0.75rem; width: 100%; justify-content: flex-end;">
+                <input type="hidden" name="order_id" id="codOrderId">
+                <input type="hidden" name="action" value="complete_cod">
+                <button type="button" onclick="hideCodModal()" 
+                        style="padding: 0.5rem 1rem; border: 2px solid #E5E7EB; color: #4B5563; border-radius: 0.5rem; font-weight: 600; background: white; cursor: pointer; transition: all 0.2s; font-size: 0.875rem;"
+                        onmouseover="this.style.borderColor='#D1D5DB'; this.style.backgroundColor='#F3F4F6';"
+                        onmouseout="this.style.borderColor='#E5E7EB'; this.style.backgroundColor='white';">
+                    Batal
+                </button>
+                <button type="submit" 
+                        style="display: inline-flex; align-items: center; padding: 0.5rem 1rem; background-color: #2563EB; color: white; border-radius: 0.5rem; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05); font-size: 0.875rem;"
+                        onmouseover="this.style.backgroundColor='#1D4ED8'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 6px rgba(0,0,0,0.1)';"
+                        onmouseout="this.style.backgroundColor='#2563EB'; this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 2px rgba(0,0,0,0.05)';">
+                    <i class="bi bi-check2-circle mr-2"></i> Ya, Selesaikan
+                </button>
+            </form>
         </div>
     </div>
 </div>
+
+<style>
+    #approveModal.hidden, #rejectModal.hidden, #codModal.hidden {
+        display: none !important;
+    }
+    #approveModal, #rejectModal, #codModal {
+        display: flex !important;
+    }
+</style>

@@ -20,66 +20,23 @@ if (isset($_SESSION['message'])) {
     unset($_SESSION['message']);
 }
 
+$pageTitle = "Admin Dashboard";
+require_once 'includes/header.php';
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - ParfumMy</title>
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
-    <link href="../css/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="admin.css">
-</head>
-<body>
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
-    <div class="container-fluid">
-        <a class="navbar-brand d-flex align-items-center" href="dashboard.php">
-            <i class="bi bi-flower2 me-2 text-warning"></i>
-            <span class="fw-bold">ParfumMy Admin</span>
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarContent">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-person-circle me-1"></i> <?php echo htmlspecialchars($_SESSION['username'] ?? 'Admin'); ?>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="../index.php" target="_blank"><i class="bi bi-box-arrow-up-right me-2"></i>View Site</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-danger" href="../logout.php"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-
-<div class="container-fluid">
-    <div class="row">
-        <?php include 'includes/sidebar.php'; ?>
 
         <!-- Main content -->
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+        <main class="flex-1 px-2 pb-2">
             <?php if (!empty($message)): ?>
-                <div class="alert alert-success alert-dismissible fade show mb-4 shadow-sm" role="alert">
-                    <i class="bi bi-check-circle-fill me-2"></i> <?php echo htmlspecialchars($message); ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 shadow-sm flex items-center">
+                    <i class="bi bi-check-circle-fill mr-2"></i> <?php echo htmlspecialchars($message); ?>
                 </div>
             <?php endif; ?>
 
-           
-
             <!-- Hero Section -->
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom">
+            <div class="pt-0 mt-0 pb-4 mb-1 border-b border-gray-200">
                 <div>
-                    <h1 class="h2 fw-bold text-dark mb-1">Dashboard </h1>
-                    <p class="text-muted">Welcome back, <?php echo htmlspecialchars($_SESSION['username'] ?? 'Admin'); ?>! </p>
+                    <h1 class="text-3xl font-bold text-gray-900 mb-1">Dashboard</h1>
+                    <p class="text-gray-600">Welcome back, <?php echo htmlspecialchars($_SESSION['username'] ?? 'Admin'); ?>!</p>
                 </div>
             </div>
 
@@ -105,165 +62,164 @@ if (isset($_SESSION['message'])) {
             ?>
 
             <!-- Stat cards -->
-            <div class="row g-4 mb-5">
-                <div class="col-12 col-sm-6 col-xl-3">
-                    <div class="stat-card h-100 p-4">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
-                            <div>
-                                <h6 class="text-muted mb-1 text-uppercase small fw-bold">Total Products</h6>
-                                <h2 class="mb-0 fw-bold display-6"><?php echo number_format($totalProducts); ?></h2>
-                            </div>
-                            <div class="icon-box bg-primary-soft">
-                                <i class="bi bi-collection"></i>
-                            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h6 class="text-gray-500 text-xs uppercase font-bold mb-1">Total Produk</h6>
+                            <h2 class="text-4xl font-bold"><?php echo number_format($totalProducts); ?></h2>
                         </div>
-                        <div class="progress" style="height: 6px; border-radius: 3px;">
-                            <div class="progress-bar bg-warning" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+                            <i class="bi bi-collection text-blue-600 text-2xl"></i>
                         </div>
                     </div>
-                </div>
-                <div class="col-12 col-sm-6 col-xl-3">
-                    <div class="stat-card h-100 p-4">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
-                            <div>
-                                <h6 class="text-muted mb-1 text-uppercase small fw-bold">Male Perfumes</h6>
-                                <h2 class="mb-0 fw-bold display-6"><?php echo number_format($men); ?></h2>
-                            </div>
-                            <div class="icon-box bg-info-soft">
-                                <i class="bi bi-gender-male"></i>
-                            </div>
-                        </div>
-                        <div class="progress" style="height: 6px; border-radius: 3px;">
-                            <div class="progress-bar bg-info" role="progressbar" style="width: <?php echo $totalProducts > 0 ? ($men/$totalProducts)*100 : 0; ?>%" aria-valuenow="<?php echo $men; ?>" aria-valuemin="0" aria-valuemax="<?php echo $totalProducts; ?>"></div>
-                        </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-gold h-2 rounded-full" style="width: 100%"></div>
                     </div>
                 </div>
-                <div class="col-12 col-sm-6 col-xl-3">
-                    <div class="stat-card h-100 p-4">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
-                            <div>
-                                <h6 class="text-muted mb-1 text-uppercase small fw-bold">Female Perfumes</h6>
-                                <h2 class="mb-0 fw-bold display-6"><?php echo number_format($women); ?></h2>
-                            </div>
-                            <div class="icon-box bg-pink-soft">
-                                <i class="bi bi-gender-female"></i>
-                            </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h6 class="text-gray-500 text-xs uppercase font-bold mb-1">Parfum Pria</h6>
+                            <h2 class="text-4xl font-bold"><?php echo number_format($men); ?></h2>
                         </div>
-                        <div class="progress" style="height: 6px; border-radius: 3px;">
-                            <div class="progress-bar bg-danger" role="progressbar" style="width: <?php echo $totalProducts > 0 ? ($women/$totalProducts)*100 : 0; ?>%" aria-valuenow="<?php echo $women; ?>" aria-valuemin="0" aria-valuemax="<?php echo $totalProducts; ?>"></div>
+                        <div class="w-16 h-16 bg-cyan-100 rounded-full flex items-center justify-center">
+                            <i class="bi bi-gender-male text-cyan-600 text-2xl"></i>
                         </div>
                     </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-cyan-500 h-2 rounded-full" style="width: <?php echo $totalProducts > 0 ? ($men/$totalProducts)*100 : 0; ?>%"></div>
+                    </div>
                 </div>
-                <div class="col-12 col-sm-6 col-xl-3">
-                    <div class="stat-card h-100 p-4">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
-                            <div>
-                                <h6 class="text-muted mb-1 text-uppercase small fw-bold">Unisex Perfumes</h6>
-                                <h2 class="mb-0 fw-bold display-6"><?php echo number_format($unisex); ?></h2>
-                            </div>
-                            <div class="icon-box bg-success-soft">
-                                <i class="bi bi-people"></i>
-                            </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h6 class="text-gray-500 text-xs uppercase font-bold mb-1">Parfum Wanita</h6>
+                            <h2 class="text-4xl font-bold"><?php echo number_format($women); ?></h2>
                         </div>
-                        <div class="progress" style="height: 6px; border-radius: 3px;">
-                            <div class="progress-bar bg-success" role="progressbar" style="width: <?php echo $totalProducts > 0 ? ($unisex/$totalProducts)*100 : 0; ?>%" aria-valuenow="<?php echo $unisex; ?>" aria-valuemin="0" aria-valuemax="<?php echo $totalProducts; ?>"></div>
+                        <div class="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center">
+                            <i class="bi bi-gender-female text-pink-600 text-2xl"></i>
                         </div>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-pink-500 h-2 rounded-full" style="width: <?php echo $totalProducts > 0 ? ($women/$totalProducts)*100 : 0; ?>%"></div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h6 class="text-gray-500 text-xs uppercase font-bold mb-1">Parfum Unisex</h6>
+                            <h2 class="text-4xl font-bold"><?php echo number_format($unisex); ?></h2>
+                        </div>
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                            <i class="bi bi-people text-green-600 text-2xl"></i>
+                        </div>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-green-500 h-2 rounded-full" style="width: <?php echo $totalProducts > 0 ? ($unisex/$totalProducts)*100 : 0; ?>%"></div>
                     </div>
                 </div>
             </div>
 
             <!-- Quick actions & Latest Products -->
-            <div class="row g-4">
-                <div class="col-lg-4">
-                    <div class="card table-card h-100">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0 fw-bold">Quick Actions</h5>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div class="lg:col-span-4">
+                    <div class="bg-white rounded-lg shadow-md h-full">
+                        <div class="p-6 border-b border-gray-200">
+                            <h5 class="font-bold text-lg">Aksi Cepat</h5>
                         </div>
-                        <div class="card-body">
-                            <div class="row g-3">
-                                <div class="col-6">
-                                    <a href="products.php" class="btn btn-outline-primary w-100 h-100 d-flex flex-column align-items-center justify-content-center p-3 gap-2">
-                                        <i class="bi bi-box-seam fs-3"></i>
-                                        <span>Products</span>
-                                    </a>
-                                </div>
-                                <div class="col-6">
-                                    <a href="carousel.php" class="btn btn-outline-dark w-100 h-100 d-flex flex-column align-items-center justify-content-center p-3 gap-2">
-                                        <i class="bi bi-images fs-3"></i>
-                                        <span>Carousel</span>
-                                    </a>
-                                </div>
-                                <div class="col-6">
-                                    <a href="sales_report.php" class="btn btn-outline-dark w-100 h-100 d-flex flex-column align-items-center justify-content-center p-3 gap-2">
-                                        <i class="bi bi-bar-chart-line fs-3"></i>
-                                        <span>Reports</span>
-                                    </a>
-                                </div>
-                                <div class="col-6">
-                                    <a href="../index.php" target="_blank" class="btn btn-outline-secondary w-100 h-100 d-flex flex-column align-items-center justify-content-center p-3 gap-2">
-                                        <i class="bi bi-shop-window fs-3"></i>
-                                        <span>Store</span>
-                                    </a>
-                                </div>
+                        <div class="p-6">
+                            <div class="grid grid-cols-2 gap-4">
+                                <a href="products.php" class="flex flex-col items-center justify-center p-6 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md hover:bg-gray-50 transition-all duration-200 group">
+                                    <div class="w-12 h-12 rounded-full bg-yellow-50 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-200">
+                                        <i class="bi bi-box-seam text-2xl text-[#D4AF37]"></i>
+                                    </div>
+                                    <span class="font-semibold text-gray-700 group-hover:text-[#D4AF37] transition-colors">Produk</span>
+                                </a>
+                                <a href="carousel.php" class="flex flex-col items-center justify-center p-6 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md hover:bg-gray-50 transition-all duration-200 group">
+                                    <div class="w-12 h-12 rounded-full bg-yellow-50 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-200">
+                                        <i class="bi bi-images text-2xl text-[#D4AF37]"></i>
+                                    </div>
+                                    <span class="font-semibold text-gray-700 group-hover:text-[#D4AF37] transition-colors">Carousel</span>
+                                </a>
+                                <a href="sales_report.php" class="flex flex-col items-center justify-center p-6 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md hover:bg-gray-50 transition-all duration-200 group">
+                                    <div class="w-12 h-12 rounded-full bg-yellow-50 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-200">
+                                        <i class="bi bi-bar-chart-line text-2xl text-[#D4AF37]"></i>
+                                    </div>
+                                    <span class="font-semibold text-gray-700 group-hover:text-[#D4AF37] transition-colors">Laporan</span>
+                                </a>
+                                <a href="../index.php" target="_blank" class="flex flex-col items-center justify-center p-6 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md hover:bg-gray-50 transition-all duration-200 group">
+                                    <div class="w-12 h-12 rounded-full bg-yellow-50 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-200">
+                                        <i class="bi bi-shop-window text-2xl text-[#D4AF37]"></i>
+                                    </div>
+                                    <span class="font-semibold text-gray-700 group-hover:text-[#D4AF37] transition-colors">Toko</span>
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="col-lg-8">
-                    <div class="card table-card h-100">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5 class="card-title mb-0 fw-bold">Latest Products</h5>
-                            <a href="products.php" class="btn btn-sm btn-primary">View All</a>
+                <div class="lg:col-span-8">
+                    <div class="bg-white rounded-lg shadow-md h-full">
+                        <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+                            <h5 class="font-bold text-lg">Produk Terbaru</h5>
+                            <a href="products.php" style="padding: 0.5rem 1rem; background-color: #D4AF37; color: #1A1A1A; border-radius: 0.5rem; font-weight: 600; font-size: 0.875rem; transition: all 0.2s; text-decoration: none; display: inline-block;"
+                               onmouseover="this.style.backgroundColor='#B5952F'; this.style.transform='translateY(-1px)';"
+                               onmouseout="this.style.backgroundColor='#D4AF37'; this.style.transform='translateY(0)';">Lihat Semua</a>
                         </div>
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle mb-0">
-                                <thead class="table-light">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full">
+                                <thead class="bg-gray-50">
                                 <tr>
-                                    <th style="width:60px;">#</th>
-                                    <th>Name</th>
-                                    <th>Size</th>
-                                    <th>Gender</th>
-                                    <th>Action</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-16">#</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ukuran</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gender</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="bg-white divide-y divide-gray-200">
                                 <?php if (!empty($latest)): $i = 1;
                                     foreach ($latest as $p): ?>
-                                        <tr>
-                                            <td><?php echo $i++; ?></td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="avatar-sm bg-light rounded me-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 40px; height: 40px;">
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?php echo $i++; ?></td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <div class="w-10 h-10 bg-gray-100 rounded mr-3 flex items-center justify-center overflow-hidden">
                                                         <?php if ($p->getImagePath()): ?>
-                                                            <img src="../<?php echo htmlspecialchars($p->getImagePath()); ?>" alt="" class="rounded" style="width: 100%; height: 100%; object-fit: cover;">
+                                                            <img src="../<?php echo htmlspecialchars($p->getImagePath()); ?>" alt="" class="w-full h-full object-cover">
                                                         <?php else: ?>
-                                                            <i class="bi bi-image text-muted"></i>
+                                                            <i class="bi bi-image text-gray-400"></i>
                                                         <?php endif; ?>
                                                     </div>
-                                                    <span class="fw-semibold text-dark"><?php echo htmlspecialchars($p->getNama()); ?></span>
+                                                    <span class="font-semibold text-gray-900"><?php echo htmlspecialchars($p->getNama()); ?></span>
                                                 </div>
                                             </td>
-                                            <td><span class="text-muted"><?php echo htmlspecialchars($p->getUkuran()); ?> ml</span></td>
-                                            <td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"><?php echo htmlspecialchars($p->getUkuran()); ?> ml</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
                                                 <?php 
                                                     $g = $p->getGender();
-                                                    $badgeClass = 'bg-secondary';
-                                                    if($g == 'Male') $badgeClass = 'bg-info';
-                                                    elseif($g == 'Female') $badgeClass = 'bg-danger';
-                                                    elseif($g == 'Unisex') $badgeClass = 'bg-success';
+                                                    $badgeClass = 'bg-gray-100 text-gray-800';
+                                                    if($g == 'Male') $badgeClass = 'bg-cyan-100 text-cyan-800';
+                                                    elseif($g == 'Female') $badgeClass = 'bg-pink-100 text-pink-800';
+                                                    elseif($g == 'Unisex') $badgeClass = 'bg-green-100 text-green-800';
                                                 ?>
-                                                <span class="badge <?php echo $badgeClass; ?> bg-opacity-75 rounded-pill px-3"><?php echo htmlspecialchars($g); ?></span>
+                                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full <?php echo $badgeClass; ?>"><?php echo htmlspecialchars($g); ?></span>
                                             </td>
-                                            <td>
-                                                <a href="product_form.php?id=<?php echo $p->getId(); ?>" class="btn btn-sm btn-light text-primary hover-shadow"><i class="bi bi-pencil-square"></i></a>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                                <a href="product_form.php?id=<?php echo $p->getId(); ?>" class="inline-flex items-center px-3 py-2 bg-gray-100 text-blue-600 rounded hover:bg-gray-200 transition">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </a>
                                             </td>
                                         </tr>
                                     <?php endforeach; else: ?>
                                     <tr>
-                                        <td colspan="5" class="text-center text-muted py-5">
-                                            <i class="bi bi-box-seam display-4 d-block mb-3 opacity-50"></i>
-                                            No products found.
+                                        <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+                                            <i class="bi bi-box-seam text-6xl block mb-4 opacity-50"></i>
+                                            Tidak ada produk.
                                         </td>
                                     </tr>
                                 <?php endif; ?>
@@ -275,13 +231,5 @@ if (isset($_SESSION['message'])) {
             </div>
 
         </main>
-    </div>
-</div>
 
 <?php include 'includes/footer.php'; ?>
-
-<script src="../sidebar.js"></script>
-<!-- Bootstrap JS -->
-<script src="../js/bootstrap.bundle.min.js"></script>
-</body>
-</html>

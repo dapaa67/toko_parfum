@@ -7,7 +7,7 @@ require_once '../models/OrderManager.php';
 $orderId = $_GET['order_id'] ?? 0;
 
 if (!$orderId) {
-    echo '<div class="alert alert-danger">ID Pesanan tidak valid.</div>';
+    echo '<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">ID Pesanan tidak valid.</div>';
     exit;
 }
 
@@ -15,22 +15,22 @@ $orderManager = new OrderManager();
 $items = $orderManager->getOrderItems($orderId);
 
 if (empty($items)) {
-    echo '<div class="alert alert-warning">Tidak ada item ditemukan untuk pesanan ini.</div>';
+    echo '<div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded">Tidak ada item ditemukan untuk pesanan ini.</div>';
     exit;
 }
 ?>
 
-<div class="table-responsive">
-    <table class="table table-hover align-middle">
-        <thead class="table-light">
+<div class="overflow-x-auto border border-gray-200 rounded-lg mb-6">
+    <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
             <tr>
-                <th>Produk</th>
-                <th class="text-center">Jumlah</th>
-                <th class="text-end">Harga Satuan</th>
-                <th class="text-end">Subtotal</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produk</th>
+                <th class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah</th>
+                <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Harga Satuan</th>
+                <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Subtotal</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="bg-white divide-y divide-gray-200">
             <?php 
             $grandTotal = 0;
             foreach ($items as $item): 
@@ -38,22 +38,26 @@ if (empty($items)) {
                 $grandTotal += $subtotal;
             ?>
                 <tr>
-                    <td>
-                        <div class="d-flex align-items-center">
-                            <img src="../<?php echo htmlspecialchars($item['image_path']); ?>" alt="" width="50" height="50" class="rounded me-3" style="object-fit: cover;">
-                            <span class="fw-medium"><?php echo htmlspecialchars($item['nama']); ?></span>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div class="h-10 w-10 flex-shrink-0">
+                                <img class="h-10 w-10 rounded object-cover" src="../<?php echo htmlspecialchars($item['image_path']); ?>" alt="">
+                            </div>
+                            <div class="ml-4">
+                                <div class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($item['nama']); ?></div>
+                            </div>
                         </div>
                     </td>
-                    <td class="text-center"><?php echo $item['jumlah']; ?></td>
-                    <td class="text-end">Rp <?php echo number_format($item['harga_saat_beli'], 0, ',', '.'); ?></td>
-                    <td class="text-end fw-semibold">Rp <?php echo number_format($subtotal, 0, ',', '.'); ?></td>
+                    <td class="px-4 py-3 whitespace-nowrap text-center text-sm text-gray-500"><?php echo $item['jumlah']; ?></td>
+                    <td class="px-4 py-3 whitespace-nowrap text-right text-sm text-gray-500">Rp <?php echo number_format($item['harga_saat_beli'], 0, ',', '.'); ?></td>
+                    <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-semibold text-gray-900">Rp <?php echo number_format($subtotal, 0, ',', '.'); ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
-        <tfoot class="table-light">
+        <tfoot class="bg-gray-50">
             <tr>
-                <td colspan="3" class="text-end fw-bold">Total Pesanan</td>
-                <td class="text-end fw-bold text-primary fs-5">Rp <?php echo number_format($grandTotal, 0, ',', '.'); ?></td>
+                <td colspan="3" class="px-4 py-3 text-right text-sm font-bold text-gray-900">Total Pesanan</td>
+                <td class="px-4 py-3 text-right text-sm font-bold text-blue-600">Rp <?php echo number_format($grandTotal, 0, ',', '.'); ?></td>
             </tr>
         </tfoot>
     </table>
@@ -65,21 +69,23 @@ $order = $orderManager->getOrderById($orderId);
 ?>
 
 <?php if ($order['payment_proof']): ?>
-    <div class="mt-4">
-        <h6 class="fw-bold">Bukti Pembayaran</h6>
-        <div class="card mb-3">
-            <div class="card-body text-center">
-                <img src="../<?php echo htmlspecialchars($order['payment_proof']); ?>" class="img-fluid rounded" style="max-height: 300px;" alt="Bukti Pembayaran">
-            </div>
+    <div class="mt-6">
+        <h6 class="font-bold text-gray-900 mb-3">Bukti Pembayaran</h6>
+        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-4 flex justify-center">
+            <img src="../<?php echo htmlspecialchars($order['payment_proof']); ?>" class="max-h-64 rounded shadow-sm" alt="Bukti Pembayaran">
         </div>
         
         <?php if ($order['status'] === 'Menunggu Konfirmasi'): ?>
-            <div class="d-flex justify-content-end gap-2">
-                <button type="button" class="btn btn-danger" onclick="showRejectModal(<?php echo $orderId; ?>)">
-                    <i class="bi bi-x-circle me-1"></i> Tolak Pembayaran
+            <div class="flex justify-end gap-3">
+                <button type="button" 
+                        onclick="showRejectModal(<?php echo $orderId; ?>)"
+                        class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-semibold flex items-center">
+                    <i class="bi bi-x-circle mr-2"></i> Tolak Pembayaran
                 </button>
-                <button type="button" class="btn btn-success" onclick="showApproveModal(<?php echo $orderId; ?>)">
-                    <i class="bi bi-check-circle me-1"></i> Setujui Pembayaran
+                <button type="button" 
+                        onclick="showApproveModal(<?php echo $orderId; ?>)"
+                        class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-semibold flex items-center">
+                    <i class="bi bi-check-circle mr-2"></i> Setujui Pembayaran
                 </button>
             </div>
         <?php endif; ?>
@@ -90,9 +96,11 @@ $order = $orderManager->getOrderById($orderId);
 // Logika untuk tombol "Selesaikan Pesanan (COD)"
 if ($order['metode_pembayaran'] === 'Cash on Delivery (COD)' && $order['status'] === 'Pending'): 
 ?>
-    <div class="mt-4 text-end">
-        <button type="button" class="btn btn-success" onclick="showCompleteCodModal(<?php echo $orderId; ?>)">
-            <i class="bi bi-check2-circle me-1"></i> Selesaikan Pesanan (COD)
+    <div class="mt-6 text-right">
+        <button type="button" 
+                onclick="showCodModal(<?php echo $orderId; ?>)"
+                class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-semibold flex items-center inline-flex">
+            <i class="bi bi-check2-circle mr-2"></i> Selesaikan Pesanan (COD)
         </button>
     </div>
 <?php endif; ?>

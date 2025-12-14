@@ -1,0 +1,92 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;700&family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+/* Custom styles that can't be configured in Tailwind */
+
+/* Body base styles */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding-top: 56px;
+    background-color: #FDFBF7;
+    /* Off-White/Cream */
+    color: #1A1A1A;
+    /* Almost Black */
+    font-family: 'DM Sans', sans-serif;
+}
+
+/* Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: #2C1810;
+}
+
+/* Buttons (Global override if needed, though Tailwind classes usually handle this) */
+.btn,
+button,
+[type='button'],
+[type='submit'] {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Carousel custom SVG controls - Updated color to #D4AF37 */
+.carousel-control-next-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23D4AF37'%3e%3cpath d='M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+}
+
+.carousel-control-prev-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23D4AF37'%3e%3cpath d='M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z'/%3e%3c/svg%3e");
+}
+
+/* Promo banner overlay */
+.promo-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(44, 24, 16, 0.4);
+    /* Dark Coffee overlay */
+    z-index: -1;
+}
+
+/* Company page timeline */
+.timeline:before {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(#D4AF37, #FDFBF7);
+}
+
+.timeline-item {
+    position: relative;
+    padding-left: 2.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 0.25rem;
+    width: 14px;
+    height: 14px;
+    background: #D4AF37;
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2);
+}
+
+/* Utility classes */
+.text-justify {
+    text-align: justify;
+}

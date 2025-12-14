@@ -1,0 +1,27 @@
+{
+  "name": "toko_parfum",
+  "version": "1.0.0",
+  "description": "Aplikasi berbasis web untuk penjualan parfum secara online. Sistem ini mencakup fitur lengkap untuk **Pelanggan** (User) dan **Administrator** (Admin), mulai dari registrasi, transaksi pembelian, hingga laporan penjualan.",
+  "main": "sidebar.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:css": "tailwindcss -i ./css/input.css -o ./css/output.css",
+    "build": "tailwindcss -i ./css/input.css -o ./css/output.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dapaa67/toko_parfum.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/dapaa67/toko_parfum/issues"
+  },
+  "homepage": "https://github.com/dapaa67/toko_parfum#readme",
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.17",
+    "tailwindcss": "^4.1.17"
+  }
+}

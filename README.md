@@ -32,7 +32,7 @@ User harus login terlebih dahulu untuk melakukan transaksi.
 *(Pastikan user sudah terdaftar dan aktif)*
 
 ![Login Page](img_project/login.png)
-![Register Page](img_project/registrasi.png)
+![Register Page](img_project/register.png)
 
 ### 2. Halaman Utama & Katalog
 Tampilan awal toko dan daftar produk yang tersedia.
@@ -45,13 +45,13 @@ Tampilan awal toko dan daftar produk yang tersedia.
 Proses memasukkan barang ke keranjang dan melakukan checkout pesanan.
 
 ![Keranjang Belanja](img_project/keranjang.png)
-![Proses Checkout](img_project/proses_Checkout.png)
+![Proses Checkout](img_project/checkout.png)
 ![Checkout Berhasil](img_project/checkout_berhasil.png)
 
 ### 4. Konfirmasi Pembayaran
 User mengupload bukti pembayaran melalui modal popup.
 
-![Upload Bukti Pembayaran](img_project/upload_bukti_pembayaran.png)
+![Upload Bukti Pembayaran](img_project/upload_bukti_pembayaran.jpeg)
 
 ### 5. Halaman Informasi
 Halaman pendukung untuk informasi toko dan perusahaan.
@@ -64,15 +64,14 @@ Halaman pendukung untuk informasi toko dan perusahaan.
 Admin memantau aktivitas toko dan mengelola stok barang.
 
 ![Admin Dashboard](img_project/dashboard_admin.png)
-![Manajemen Produk](img_project/Produk_Admin.png)
+![Manajemen Produk](img_project/kelola_produk_admin.png)
 ![Tambah Produk](img_project/tambah_produk_admin.png)
 
 ### 7. Admin - Kelola Banner & User
 Admin dapat mengatur banner promosi dan mengelola data user.
 
-![Kelola Banner](img_project/kelola_banner_admin.png)
-![Kelola User](img_project/kelola_users_(admin).png)
-![Detail User](img_project/Detail_users_(admin).png)
+![Kelola Banner](img_project/kelola_carousel_admin.png)
+![Kelola User](img_project/manajemen_user_admin.png)
 
 ### 8. Laporan Penjualan (Sales Report)
 **[PENTING]** Admin memiliki fitur rekapan penjualan untuk melihat omzet dan detail produk yang terjual.
@@ -81,15 +80,15 @@ Admin dapat mengatur banner promosi dan mengelola data user.
 
 ---
 
-## 💻 Teknologi yang Digunakan
+## Teknologi yang Digunakan
 *   **Bahasa Pemrograman**: PHP Native
 *   **Database**: MySQL (MariaDB)
-*   **Frontend**: HTML, CSS, Bootstrap 5
+*   **Frontend**: HTML, CSS, Bootstrap 5, Tailwind CSS, Alpine.js
 *   **Server**: Apache (XAMPP)
 
 ---
 
-## 👨‍💻 Identitas Pengembang
+## Identitas Pengembang
 *   **Nama**: Muhammad Daffa
 *   **NIM**: 221011400800
 *   **Kelas**: 07TPLP020
