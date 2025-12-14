@@ -26,74 +26,84 @@ require_once 'views/header.php';
     
     <div class="flex flex-wrap -mx-4">
         <!-- Filter Sidebar -->
-        <div class="w-full lg:w-1/4 px-4 mb-8 lg:mb-0">
+        <div class="w-full lg:w-1/4 px-4 mb-8 lg:mb-0" x-data="{ showFilter: false }">
             <div class="bg-gray-50 p-6 rounded-lg sticky top-20">
-                <h5 class="text-xl font-bold text-gold mb-4">Filter</h5>
-                <hr class="my-4 border-gray-300">
-                <form action="products.php" method="get">
-                    <!-- Aroma Filter -->
-                    <h6 class="font-semibold mb-3">Aroma</h6>
-                    <div class="space-y-2 mb-6">
-                        <?php 
-                        $allKategoris = $parfumManager->getDistinctKategori();
-                        foreach ($allKategoris as $kategori): 
-                        ?>
-                            <div class="flex items-center">
-                                <input class="w-4 h-4 text-gold border-gray-300 rounded focus:ring-gold mr-2" type="checkbox" name="kategori[]" value="<?php echo htmlspecialchars($kategori); ?>" id="kategori<?php echo htmlspecialchars($kategori); ?>"
-                                    <?php echo in_array($kategori, $kategoris ?? []) ? 'checked' : ''; ?>>
-                                <label class="text-sm" for="kategori<?php echo htmlspecialchars($kategori); ?>"><?php echo htmlspecialchars($kategori); ?></label>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                    <hr class="my-4 border-gray-300">
-
-                    <!-- Gender Filter -->
-                    <h6 class="font-semibold mb-3">Gender</h6>
-                    <div class="space-y-2 mb-6">
-                        <div class="flex items-center">
-                            <input class="w-4 h-4 text-gold border-gray-300 rounded focus:ring-gold mr-2" type="checkbox" name="gender[]" value="Male" id="genderMale" 
-                                <?php echo in_array('Male', $genders ?? []) ? 'checked' : ''; ?>>
-                            <label class="text-sm" for="genderMale">Male</label>
-                        </div>
-                        <div class="flex items-center">
-                            <input class="w-4 h-4 text-gold border-gray-300 rounded focus:ring-gold mr-2" type="checkbox" name="gender[]" value="Female" id="genderFemale"
-                                <?php echo in_array('Female', $genders ?? []) ? 'checked' : ''; ?>>
-                            <label class="text-sm" for="genderFemale">Female</label>
-                        </div>
-                        <div class="flex items-center">
-                            <input class="w-4 h-4 text-gold border-gray-300 rounded focus:ring-gold mr-2" type="checkbox" name="gender[]" value="Unisex" id="genderUnisex"
-                                <?php echo in_array('Unisex', $genders ?? []) ? 'checked' : ''; ?>>
-                            <label class="text-sm" for="genderUnisex">Unisex</label>
-                        </div>
-                    </div>
-                    <hr class="my-4 border-gray-300">
-                    <!-- Size Filter -->
-                    <h6 class="font-semibold mb-3">Size (ml)</h6>
-                    <div class="space-y-2 mb-6">
-                        <div class="flex items-center">
-                            <input class="w-4 h-4 text-gold border-gray-300 rounded focus:ring-gold mr-2" type="checkbox" name="size[]" value="200" id="size200"
-                                <?php echo in_array('200', $sizes ?? []) ? 'checked' : ''; ?>>
-                            <label class="text-sm" for="size200">200ml</label>
-                        </div>
-                        <div class="flex items-center">
-                            <input class="w-4 h-4 text-gold border-gray-300 rounded focus:ring-gold mr-2" type="checkbox" name="size[]" value="100" id="size100"
-                                <?php echo in_array('100', $sizes ?? []) ? 'checked' : ''; ?>>
-                            <label class="text-sm" for="size100">100ml</label>
-                        </div>
-                        <div class="flex items-center">
-                            <input class="w-4 h-4 text-gold border-gray-300 rounded focus:ring-gold mr-2" type="checkbox" name="size[]" value="50" id="size50"
-                                <?php echo in_array('50', $sizes ?? []) ? 'checked' : ''; ?>>
-                            <label class="text-sm" for="size50">50ml</label>
-                        </div>
-                    </div>
-                    <hr class="my-4 border-gray-300">
-                    <button type="submit" 
-                            style="width: 100%; background-color: #D4AF37; color: #1A1A1A; font-weight: 600; padding: 0.75rem 1rem; border-radius: 0.5rem; border: none; cursor: pointer; transition: all 0.2s; font-size: 0.9375rem;"
-                            onmouseover="this.style.backgroundColor='#B5952F';"
-                            onmouseout="this.style.backgroundColor='#D4AF37';">
-                        <i class="bi bi-funnel-fill" style="margin-right: 0.375rem;"></i> Terapkan Filter
+                <div class="flex justify-between items-center mb-4 lg:mb-0">
+                    <h5 class="text-xl font-bold text-gold mb-0">Filter</h5>
+                    <!-- Toggle Button for Mobile -->
+                    <button @click="showFilter = !showFilter" class="lg:hidden text-gray-600 hover:text-gold focus:outline-none">
+                        <i class="bi" :class="showFilter ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
                     </button>
-                </form>
+                </div>
+                
+                <!-- Filter Content -->
+                <div :class="{'hidden': !showFilter, 'block': showFilter}" class="lg:block mt-4 lg:mt-0">
+                    <hr class="my-4 border-gray-300">
+                    <form action="products.php" method="get">
+                        <!-- Aroma Filter -->
+                        <h6 class="font-semibold mb-3">Aroma</h6>
+                        <div class="space-y-2 mb-6">
+                            <?php 
+                            $allKategoris = $parfumManager->getDistinctKategori();
+                            foreach ($allKategoris as $kategori): 
+                            ?>
+                                <div class="flex items-center">
+                                    <input class="w-4 h-4 text-gold border-gray-300 rounded focus:ring-gold mr-2" type="checkbox" name="kategori[]" value="<?php echo htmlspecialchars($kategori); ?>" id="kategori<?php echo htmlspecialchars($kategori); ?>"
+                                        <?php echo in_array($kategori, $kategoris ?? []) ? 'checked' : ''; ?>>
+                                    <label class="text-sm" for="kategori<?php echo htmlspecialchars($kategori); ?>"><?php echo htmlspecialchars($kategori); ?></label>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                        <hr class="my-4 border-gray-300">
+
+                        <!-- Gender Filter -->
+                        <h6 class="font-semibold mb-3">Gender</h6>
+                        <div class="space-y-2 mb-6">
+                            <div class="flex items-center">
+                                <input class="w-4 h-4 text-gold border-gray-300 rounded focus:ring-gold mr-2" type="checkbox" name="gender[]" value="Male" id="genderMale" 
+                                    <?php echo in_array('Male', $genders ?? []) ? 'checked' : ''; ?>>
+                                <label class="text-sm" for="genderMale">Male</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input class="w-4 h-4 text-gold border-gray-300 rounded focus:ring-gold mr-2" type="checkbox" name="gender[]" value="Female" id="genderFemale"
+                                    <?php echo in_array('Female', $genders ?? []) ? 'checked' : ''; ?>>
+                                <label class="text-sm" for="genderFemale">Female</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input class="w-4 h-4 text-gold border-gray-300 rounded focus:ring-gold mr-2" type="checkbox" name="gender[]" value="Unisex" id="genderUnisex"
+                                    <?php echo in_array('Unisex', $genders ?? []) ? 'checked' : ''; ?>>
+                                <label class="text-sm" for="genderUnisex">Unisex</label>
+                            </div>
+                        </div>
+                        <hr class="my-4 border-gray-300">
+                        <!-- Size Filter -->
+                        <h6 class="font-semibold mb-3">Size (ml)</h6>
+                        <div class="space-y-2 mb-6">
+                            <div class="flex items-center">
+                                <input class="w-4 h-4 text-gold border-gray-300 rounded focus:ring-gold mr-2" type="checkbox" name="size[]" value="200" id="size200"
+                                    <?php echo in_array('200', $sizes ?? []) ? 'checked' : ''; ?>>
+                                <label class="text-sm" for="size200">200ml</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input class="w-4 h-4 text-gold border-gray-300 rounded focus:ring-gold mr-2" type="checkbox" name="size[]" value="100" id="size100"
+                                    <?php echo in_array('100', $sizes ?? []) ? 'checked' : ''; ?>>
+                                <label class="text-sm" for="size100">100ml</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input class="w-4 h-4 text-gold border-gray-300 rounded focus:ring-gold mr-2" type="checkbox" name="size[]" value="50" id="size50"
+                                    <?php echo in_array('50', $sizes ?? []) ? 'checked' : ''; ?>>
+                                <label class="text-sm" for="size50">50ml</label>
+                            </div>
+                        </div>
+                        <hr class="my-4 border-gray-300">
+                        <button type="submit" 
+                                style="width: 100%; background-color: #D4AF37; color: #1A1A1A; font-weight: 600; padding: 0.75rem 1rem; border-radius: 0.5rem; border: none; cursor: pointer; transition: all 0.2s; font-size: 0.9375rem;"
+                                onmouseover="this.style.backgroundColor='#B5952F';"
+                                onmouseout="this.style.backgroundColor='#D4AF37';">
+                            <i class="bi bi-funnel-fill" style="margin-right: 0.375rem;"></i> Terapkan Filter
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
 
