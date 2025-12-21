@@ -499,6 +499,63 @@ window.hideOrderDetailsModal = function() {
         modal.classList.add('hidden');
     }, 200);
 };
+
+// Approve Modal
+window.showApproveModal = function(orderId) {
+    const modal = document.getElementById('approveModal');
+    document.getElementById('approveOrderId').value = orderId;
+    
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+        modal.querySelector('.modal-content').classList.add('show');
+    }, 10);
+};
+
+window.hideApproveModal = function() {
+    const modal = document.getElementById('approveModal');
+    modal.querySelector('.modal-content').classList.remove('show');
+    setTimeout(() => {
+        modal.classList.add('hidden');
+    }, 200);
+};
+
+// Reject Modal
+window.showRejectModal = function(orderId) {
+    const modal = document.getElementById('rejectModal');
+    document.getElementById('rejectOrderId').value = orderId;
+    
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+        modal.querySelector('.modal-content').classList.add('show');
+    }, 10);
+};
+
+window.hideRejectModal = function() {
+    const modal = document.getElementById('rejectModal');
+    modal.querySelector('.modal-content').classList.remove('show');
+    setTimeout(() => {
+        modal.classList.add('hidden');
+    }, 200);
+};
+
+// COD Modal
+window.showCodModal = function(orderId) {
+    const modal = document.getElementById('codModal');
+    document.getElementById('codOrderId').value = orderId;
+    
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+        modal.querySelector('.modal-content').classList.add('show');
+    }, 10);
+};
+
+window.hideCodModal = function() {
+    const modal = document.getElementById('codModal');
+    modal.querySelector('.modal-content').classList.remove('show');
+    setTimeout(() => {
+        modal.classList.add('hidden');
+    }, 200);
+};
 </script>
 
 <!-- Order Details Modal -->

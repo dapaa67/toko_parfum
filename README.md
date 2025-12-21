@@ -28,53 +28,53 @@ Aplikasi berbasis web untuk penjualan parfum secara online. Sistem ini mencakup 
 Berikut adalah dokumentasi tampilan dan alur penggunaan aplikasi:
 
 ### 1. Login & Registrasi
-User harus login terlebih dahulu untuk melakukan transaksi.
+Alur dimulai dengan registrasi akun baru jika belum memiliki akun, kemudian login untuk mendapatkan akses penuh ke fitur belanja.
 *(Pastikan user sudah terdaftar dan aktif)*
 
 ![Login Page](img_project/login.png)
 ![Register Page](img_project/register.png)
 
 ### 2. Halaman Utama & Katalog
-Tampilan awal toko dan daftar produk yang tersedia.
+Setelah berhasil login, user dapat melihat banner promosi di halaman utama dan menjelajahi berbagai katalog produk parfum yang tersedia dengan detail harga dan deskripsi.
 
 ![Home Page](img_project/home.png)
 ![Katalog Produk](img_project/produk.png)
 ![Detail Produk](img_project/detail_produk.png)
 
 ### 3. Keranjang & Checkout
-Proses memasukkan barang ke keranjang dan melakukan checkout pesanan.
+User memilih produk yang diinginkan, memasukkannya ke keranjang belanja, dan melanjutkan ke proses checkout dengan mengisi data pengiriman serta memilih metode pembayaran.
 
 ![Keranjang Belanja](img_project/keranjang.png)
 ![Proses Checkout](img_project/checkout.png)
 ![Checkout Berhasil](img_project/checkout_berhasil.png)
 
 ### 4. Konfirmasi Pembayaran
-User mengupload bukti pembayaran melalui modal popup.
+Setelah melakukan checkout, user harus mengunggah bukti transfer melalui menu riwayat pesanan agar admin dapat memverifikasi pembayaran tersebut.
 
 ![Upload Bukti Pembayaran](img_project/upload_bukti_pembayaran.jpeg)
 
 ### 5. Halaman Informasi
-Halaman pendukung untuk informasi toko dan perusahaan.
+User dapat mengakses informasi tambahan mengenai profil toko, visi misi perusahaan, serta detail kontak untuk bantuan layanan pelanggan.
 
 ![Halaman Toko](img_project/halaman_toko.png)
 ![Halaman Perusahaan](img_project/halaman_perusahaan.png)
 ![Halaman Kontak](img_project/halaman_kontak.png)
 
 ### 6. Halaman Admin - Dashboard & Produk
-Admin memantau aktivitas toko dan mengelola stok barang.
+Admin memiliki akses ke dashboard untuk memantau statistik penjualan secara real-time dan mengelola inventaris produk (Tambah, Edit, Hapus stok).
 
 ![Admin Dashboard](img_project/dashboard_admin.png)
 ![Manajemen Produk](img_project/kelola_produk_admin.png)
 ![Tambah Produk](img_project/tambah_produk_admin.png)
 
 ### 7. Admin - Kelola Banner & User
-Admin dapat mengatur banner promosi dan mengelola data user.
+Admin dapat mengatur konten visual seperti banner promosi di halaman depan dan mengelola status akun pengguna (Aktif atau Ban).
 
 ![Kelola Banner](img_project/kelola_carousel_admin.png)
 ![Kelola User](img_project/manajemen_user_admin.png)
 
 ### 8. Laporan Penjualan (Sales Report)
-**[PENTING]** Admin memiliki fitur rekapan penjualan untuk melihat omzet dan detail produk yang terjual.
+Admin dapat melihat rekapan seluruh transaksi yang masuk, memantau omzet, dan melakukan verifikasi (Setuju/Tolak) terhadap bukti pembayaran yang dikirimkan oleh user.
 
 ![Laporan Penjualan](img_project/laporan_penjualan_admin.png)
 
