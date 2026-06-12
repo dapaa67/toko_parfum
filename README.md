@@ -88,13 +88,6 @@ Admin dapat melihat rekapan seluruh transaksi yang masuk, memantau omzet, dan me
 
 ---
 
-## Identitas Pengembang
-*   **Nama**: Muhammad Daffa
-*   **NIM**: 221011400800
-*   **Kelas**: 07TPLP020
-
----
-
 ## Admin
 admin
 123
